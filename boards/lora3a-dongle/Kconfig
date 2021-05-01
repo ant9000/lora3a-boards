@@ -1,0 +1,16 @@
+config BOARD
+    default "lora3a-dongle" if BOARD_LORA3A_DONGLE
+
+config BOARD_LORA3A_DONGLE
+    bool
+    default y
+    select CPU_MODEL_SAMR34J18B
+    select HAS_PERIPH_ADC
+    select HAS_PERIPH_I2C
+    select HAS_PERIPH_RTC
+    select HAS_PERIPH_RTT
+    select HAS_PERIPH_SPI
+    select HAS_PERIPH_TIMER
+    select HAS_PERIPH_UART
+    select HAS_PERIPH_USBDEV
+    select HAS_RIOTBOOT
