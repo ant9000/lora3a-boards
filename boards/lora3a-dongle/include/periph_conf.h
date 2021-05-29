@@ -10,7 +10,7 @@ extern "C" {
 /**
  * @brief   GCLK reference speed
  */
-#ifdef MODULE_PERIPH_USB
+#ifdef MODULE_PERIPH_USBDEV
 #define CLOCK_CORECLOCK     (48000000U)
 #else
 #define CLOCK_CORECLOCK     (16000000U)
