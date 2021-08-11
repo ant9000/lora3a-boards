@@ -39,9 +39,6 @@ extern "C" {
 //#define LED2_OFF       (LED_PORT.OUTSET.reg = LED2_MASK)
 //#define LED2_TOGGLE    (LED_PORT.OUTTGL.reg = LED2_MASK)
 
-//#define RGBLED_RED     LED0_PIN
-//#define RGBLED_GREEN   LED1_PIN
-//#define RGBLED_BLUE    LED2_PIN
 
 void board_init(void);
 
