@@ -18,7 +18,13 @@ static const  saul_gpio_params_t saul_gpio_params[] =
         .pin  = BTN0_PIN,
         .mode = BTN0_MODE,
         .flags = SAUL_GPIO_INVERTED,
-    }
+    },
+    {
+        .name = "Vpanel Enable",
+        .pin = GPIO_PIN(PA, 19),
+        .mode = GPIO_OUT,
+        .flags = SAUL_GPIO_INIT_CLEAR,
+    },
 };
 
 #ifdef __cplusplus
