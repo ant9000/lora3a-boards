@@ -25,6 +25,14 @@ static const  saul_gpio_params_t saul_gpio_params[] =
         .mode = GPIO_OUT,
         .flags = SAUL_GPIO_INIT_CLEAR,
     },
+#ifdef BOARD_VARIANT_HARVEST8
+    {
+        .name = "Ship Mode",
+        .pin = GPIO_PIN(PA, 24),
+        .mode = GPIO_OUT,
+        .flags = SAUL_GPIO_INIT_CLEAR,
+    },
+#endif
 };
 
 #ifdef __cplusplus

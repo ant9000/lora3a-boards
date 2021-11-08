@@ -157,7 +157,11 @@ static const i2c_conf_t i2c_config[] = {
 static const adc_conf_chan_t adc_channels[] = {
     /* port, pin, muxpos */
     {GPIO_PIN(0, 0), ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC}, // mux pin is unused
+#ifdef BOARD_VARIANT_HARVEST8
+    {GPIO_PIN(PA, 9), ADC_INPUTCTRL_MUXPOS_AIN17},      // Vpanel
+#else
     {GPIO_PIN(PA, 7), ADC_INPUTCTRL_MUXPOS_AIN7},       // Vpanel
+#endif
 };
 
 
