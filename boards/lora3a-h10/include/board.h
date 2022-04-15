@@ -19,6 +19,10 @@ extern "C" {
 #define BTN0_PIN       GPIO_PIN(PA, 6)
 #define BTN0_MODE      GPIO_IN_PU
 
+#define TCXO_PWR_PIN   GPIO_PIN(PA, 9)     /**< 32 MHz TCXO 1ppm oscillator for radio enable */
+#define TX_OUTPUT_SEL_PIN	GPIO_PIN(PA, 13)    /**< BAND_SEL */
+
+
 //#define LED_PORT       PORT->Group[0]
 
 //#define LED0_PIN       GPIO_PIN(PA, 13)
