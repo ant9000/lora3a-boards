@@ -20,15 +20,15 @@ static const  saul_gpio_params_t saul_gpio_params[] =
         .flags = SAUL_GPIO_INVERTED,
     },
     {
-        .name = "Vpanel Enable",
-        .pin = GPIO_PIN(PA, 19),
+        .name = "Enable_IO",
+        .pin = GPIO_PIN(PA, 27),
         .mode = GPIO_OUT,
         .flags = SAUL_GPIO_INIT_CLEAR,
     },
 #ifdef BOARD_VARIANT_HARVEST8
     {
         .name = "Ship Mode",
-        .pin = GPIO_PIN(PA, 24),
+        .pin = GPIO_PIN(PA, 24), // in H10 ShipMode goes to an external pin. To be able to use it you have to connect to PA24 externally
         .mode = GPIO_OUT,
         .flags = SAUL_GPIO_INIT_CLEAR,
     },
