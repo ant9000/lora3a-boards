@@ -113,9 +113,18 @@ static const i2c_conf_t i2c_config[] = {
         .flags    = I2C_FLAG_NONE
     },
     {
+        .dev      = &(SERCOM5->I2CM),
+        .speed    = I2C_SPEED_NORMAL,
+        .scl_pin  = GPIO_PIN(PB, 3),   // Acme sensor 1
+        .sda_pin  = GPIO_PIN(PB, 2),
+        .mux      = GPIO_MUX_D,
+        .gclk_src = SAM0_GCLK_MAIN,
+        .flags    = I2C_FLAG_NONE
+    },
+    {
         .dev      = &(SERCOM0->I2CM),
         .speed    = I2C_SPEED_NORMAL,
-        .scl_pin  = GPIO_PIN(PA, 5),
+        .scl_pin  = GPIO_PIN(PA, 5),   // Acme sensor 2
         .sda_pin  = GPIO_PIN(PA, 4),
         .mux      = GPIO_MUX_D,
         .gclk_src = SAM0_GCLK_MAIN,
