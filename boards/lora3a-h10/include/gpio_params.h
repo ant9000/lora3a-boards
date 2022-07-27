@@ -20,19 +20,23 @@ static const  saul_gpio_params_t saul_gpio_params[] =
         .flags = SAUL_GPIO_INVERTED,
     },
     {
-        .name = "Enable_IO",
+        .name = "Enable I2C 0",
         .pin = GPIO_PIN(PA, 27),
         .mode = GPIO_OUT,
         .flags = SAUL_GPIO_INIT_CLEAR,
     },
-#ifdef BOARD_VARIANT_HARVEST8
     {
-        .name = "Ship Mode",
-        .pin = GPIO_PIN(PA, 24), // in H10 ShipMode goes to an external pin. To be able to use it you have to connect to PA24 externally
+        .name = "Enable ACME Sensor 1",
+        .pin = GPIO_PIN(PA, 28),
         .mode = GPIO_OUT,
         .flags = SAUL_GPIO_INIT_CLEAR,
     },
-#endif
+    {
+        .name = "Enable ACME Sensor 2",
+        .pin = GPIO_PIN(PA, 31),
+        .mode = GPIO_OUT,
+        .flags = SAUL_GPIO_INIT_CLEAR,
+    },
 };
 
 #ifdef __cplusplus
