@@ -1,0 +1,4 @@
+USEMODULE += periph_gpio
+USEMODULE += periph_i2c
+USEMODULE += periph_i2c_reconfigure
+USEMODULE += ztimer
