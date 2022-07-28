@@ -2,3 +2,6 @@ USEMODULE += periph_gpio
 USEMODULE += periph_i2c
 USEMODULE += periph_i2c_reconfigure
 USEMODULE += ztimer
+
+USEMODULE += i2c_scan
+USEMODULE += ps
