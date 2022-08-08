@@ -1,0 +1,4 @@
+# TODO
+INCLUDES += -I$(LORA3ABASE)/pkg/soniclib/include
+INCLUDES += -I$(LORA3ABASE)/pkg/soniclib/soniclib-v2.9.0/src/inc
+INCLUDES += -I$(LORA3ABASE)/pkg/soniclib/soniclib-v2.9.0/src/sensor_fw
