@@ -24,7 +24,7 @@
  * \file chirp_board_config.h
  *
  * This file defines required symbols used to build an application with the Chirp SonicLib
- * API and driver.  These symbols are used for static array allocations and counters in SonicLib 
+ * API and driver.  These symbols are used for static array allocations and counters in SonicLib
  * (and often applications), and are based on the number of specific resources on the target board.
  *
  * Two symbols must be defined:
