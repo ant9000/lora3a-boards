@@ -1,6 +1,9 @@
 #include "soniclib.h"
 #include "chirp_bsp.h"
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 void chbsp_board_init(ch_group_t *grp_ptr) { }
 void chbsp_reset_assert(void) { }
 void chbsp_reset_release(void) { }
@@ -44,3 +47,5 @@ void chbsp_spi_cs_off(ch_dev_t *dev_ptr) { }
 int chbsp_spi_write(ch_dev_t *dev_ptr, uint8_t *data, uint16_t num_bytes) { return 0; }
 int chbsp_spi_read(ch_dev_t *dev_ptr, uint8_t *data, uint16_t num_bytes) { return 0; }
 #endif // INCLUDE_SHASTA_SUPPORT
+
+#pragma GCC diagnostic pop

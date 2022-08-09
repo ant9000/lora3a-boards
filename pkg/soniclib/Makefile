@@ -8,8 +8,9 @@ PKG_SHA512  = d415ea9fa82f4849c2049e9f210f1a975ae5c563bade4e35acff80971f45392883
 PKG_ARCHIVE = SmartSonic-CH201-Static-Target-Rejection-Example-$(PKG_VERSION).$(PKG_EXT)
 PKG_ARCHIVE_DIR = "SmartSonic CH201 Static Target Rejection Example $(PKG_VERSION)/invn.smartsonic.str-example/source/drivers/chirpmicro"
 
-PKG_SOURCE_DIR = $(CURDIR)/$(PKG_NAME)-$(PKG_VERSION)/
-PKG_BUILD_DIR = $(CURDIR)/$(PKG_NAME)-$(PKG_VERSION)/build
+PKG_BASE_DIR = $(BINDIR)/$(PKG_NAME)
+PKG_SOURCE_DIR = $(PKG_BASE_DIR)/src
+PKG_BUILD_DIR = $(PKG_BASE_DIR)/build
 
 ifneq ($(RIOTBASE),)
 include $(RIOTBASE)/Makefile.base
@@ -25,26 +26,31 @@ TOOLCHAIN_FILE = $(PKG_SOURCE_DIR)/xcompile-toolchain.cmake
 
 all: soniclib
 
+prepare:
+	@#noop
+
 soniclib: $(PKG_BUILD_DIR)/Makefile
 	$(MAKE) -C $(PKG_BUILD_DIR)
 	cp $(PKG_BUILD_DIR)/libsoniclib_whitney.a $(BINDIR)/libsoniclib_whitney.a
+	# TODO: how can we make RIOT linking stage ignore $(PKG_BUILD_DIR)?
+	rm -rf $(PKG_BUILD_DIR)/
 
 $(PKG_BUILD_DIR)/Makefile: $(TOOLCHAIN_FILE)
 	cmake -DCMAKE_TOOLCHAIN_FILE=$(TOOLCHAIN_FILE) \
           -Wno-dev \
           -B$(PKG_BUILD_DIR) \
-          -H$(PKG_SOURCE_DIR)/src
+          -S$(PKG_SOURCE_DIR)
 
 $(TOOLCHAIN_FILE): $(PKG_SOURCE_DIR)/
 	$(RIOTTOOLS)/cmake/generate-xcompile-toolchain.sh > $(TOOLCHAIN_FILE)
 
-$(PKG_SOURCE_DIR)/: $(CURDIR)/$(PKG_NAME)-$(PKG_VERSION).$(PKG_EXT)
+$(PKG_SOURCE_DIR)/: $(PKG_BASE_DIR)/$(PKG_NAME)-$(PKG_VERSION).$(PKG_EXT)
 	$(QQ)test "$(PKG_SHA512)  $<" =  "$$(sha512sum "${<}")"
-	mkdir $@ && cd $@ && $(QQ)$(UNZIP_HERE) $<
-	$(QQ)ln -s $(PKG_ARCHIVE_DIR) $@/src
-	mkdir $@/build
+	cd $(PKG_BASE_DIR) && $(QQ)$(UNZIP_HERE) $<
+	$(QQ)ln -s $(PKG_ARCHIVE_DIR) $(PKG_SOURCE_DIR)
+	mkdir $(PKG_BUILD_DIR)
 
-$(CURDIR)/$(PKG_NAME)-$(PKG_VERSION).$(PKG_EXT):
+$(PKG_BASE_DIR)/$(PKG_NAME)-$(PKG_VERSION).$(PKG_EXT):
 	$(Q)$(DOWNLOAD_TO_FILE) $@ $(PKG_URL)/$(PKG_ARCHIVE)
 
 ..cmake_version_supported:

@@ -1,4 +1,5 @@
-# TODO
-INCLUDES += -I$(LORA3ABASE)/pkg/soniclib/include
-INCLUDES += -I$(LORA3ABASE)/pkg/soniclib/soniclib-v2.9.0/src/inc
-INCLUDES += -I$(LORA3ABASE)/pkg/soniclib/soniclib-v2.9.0/src/sensor_fw
+here := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+DIRS += $(here)/bsp
+INCLUDES += -I$(here)/include
+INCLUDES += -I$(BINDIR)/soniclib/src/inc
+INCLUDES += -I$(BINDIR)/soniclib/src/sensor_fw
