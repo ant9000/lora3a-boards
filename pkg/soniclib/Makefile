@@ -31,7 +31,8 @@ prepare:
 
 soniclib: $(PKG_BUILD_DIR)/Makefile
 	$(MAKE) -C $(PKG_BUILD_DIR)
-	cp $(PKG_BUILD_DIR)/libsoniclib_whitney.a $(BINDIR)/libsoniclib_whitney.a
+	cp $(PKG_BUILD_DIR)/libsoniclib_whitney.a $(BINDIR)/
+	cp $(PKG_BUILD_DIR)/libsoniclib_shasta.a $(BINDIR)/
 
 $(PKG_BUILD_DIR)/Makefile: $(TOOLCHAIN_FILE)
 	cmake -DCMAKE_TOOLCHAIN_FILE=$(TOOLCHAIN_FILE) \
@@ -59,3 +60,6 @@ $(PKG_BASE_DIR)/:
 	$(Q)\
         CMAKE_VERSION=$$(cmake --version | sed -n '1 {s/cmake version //;s/-rc.*//;p;}'); \
         $(RIOTTOOLS)/has_minimal_version/has_minimal_version.sh "$${CMAKE_VERSION}" "$(CMAKE_MINIMAL_VERSION)" cmake
+
+clean::
+	@rm -rf $(BINDIR)/$(PKG_NAME).a

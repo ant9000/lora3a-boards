@@ -1,5 +1,7 @@
 here := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 DIRS += $(here)/bsp
+ARCHIVES += $(BINDIR)/libsoniclib_whitney.a
+ARCHIVES += $(BINDIR)/libsoniclib_shasta.a
 INCLUDES += -I$(here)/include
 INCLUDES += -I$(BINDIR)/pkg/soniclib/src/inc
 INCLUDES += -I$(BINDIR)/pkg/soniclib/src/sensor_fw
