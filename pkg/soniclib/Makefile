@@ -2,7 +2,7 @@ PKG_NAME    = soniclib
 PKG_VERSION = v2.9.0
 PKG_EXT     = zip
 PKG_LICENSE = MIT
-PKG_URL     = https://3cfeqx1hf82y3xcoull08ihx-wpengine.netdna-ssl.com/wp-content/uploads/2022/06
+PKG_URL     = https://invensense.tdk.com/wp-content/uploads/2022/06
 PKG_SHA512  = d415ea9fa82f4849c2049e9f210f1a975ae5c563bade4e35acff80971f453928832ebf8d4db9a2b62cf5d103a0c060a40886af39895e19fa9c8ea775125c98d0
 
 PKG_ARCHIVE = SmartSonic-CH201-Static-Target-Rejection-Example-$(PKG_VERSION).$(PKG_EXT)
