@@ -12,6 +12,8 @@ PKG_BASE_DIR = $(BINDIR)/pkg/$(PKG_NAME)
 PKG_SOURCE_DIR = $(PKG_BASE_DIR)/src
 PKG_BUILD_DIR = $(PKG_BASE_DIR)/build
 
+here := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+
 ifneq ($(RIOTBASE),)
 include $(RIOTBASE)/Makefile.base
 endif
@@ -36,6 +38,8 @@ soniclib: $(PKG_BUILD_DIR)/Makefile
 
 $(PKG_BUILD_DIR)/Makefile: $(TOOLCHAIN_FILE)
 	cmake -DCMAKE_TOOLCHAIN_FILE=$(TOOLCHAIN_FILE) \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCHIRP_BOARD_CONFIG_DIR=$(here)/include \
           -Wno-dev \
           -B$(PKG_BUILD_DIR) \
           -S$(PKG_SOURCE_DIR)
