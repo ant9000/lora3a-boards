@@ -1,0 +1,34 @@
+--- src/src/ch_api.c
++++ src/src/ch_api.c
+@@ -793,6 +793,7 @@
+ 	return ret_val;
+ }
+ 
++#ifdef INCLUDE_SHASTA_SUPPORT
+ uint8_t ch_set_interrupt_mode(ch_dev_t *dev_ptr, ch_interrupt_mode_t mode) {
+ 
+ 	return ch_common_set_interrupt_mode(dev_ptr, mode);
+@@ -802,6 +803,7 @@
+ 
+ 	return ch_common_get_interrupt_mode(dev_ptr);
+ }
++#endif // INCLUDE_SHASTA_SUPPORT
+ 
+ uint8_t ch_set_static_coeff(ch_dev_t *dev_ptr, uint8_t static_coeff) {
+ 	int	ret_val = RET_ERR;
+@@ -979,6 +981,7 @@
+ 	return ret_val;	
+ }
+ 
++#ifdef INCLUDE_SHASTA_SUPPORT
+ uint8_t ch_meas_init_queue(ch_dev_t *dev_ptr) {
+ 
+ 	return ch_common_meas_init_queue(dev_ptr);
+@@ -994,6 +997,7 @@
+ 
+ 	return ch_common_meas_init(dev_ptr, meas_num, meas_config_ptr, thresh_ptr);
+ }
++#endif // INCLUDE_SHASTA_SUPPORT
+ 
+ 
+ ch_meas_status_t ch_meas_get_status(ch_dev_t *dev_ptr, uint8_t meas_num) {

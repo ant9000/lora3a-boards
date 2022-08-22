@@ -13,6 +13,8 @@ PKG_SOURCE_DIR = $(PKG_BASE_DIR)/src
 PKG_BUILD_DIR = $(PKG_BASE_DIR)/build
 
 here := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+PKG_PATCH_DIR ?= $(here)/patches
+PKG_PATCHES = $(sort $(wildcard $(PKG_PATCH_DIR)/*.patch))
 
 ifneq ($(RIOTBASE),)
 include $(RIOTBASE)/Makefile.base
@@ -51,6 +53,7 @@ $(PKG_SOURCE_DIR)/: $(PKG_BASE_DIR)/$(PKG_NAME)-$(PKG_VERSION).$(PKG_EXT)
 	$(QQ)test "$(PKG_SHA512)  $<" =  "$$(sha512sum "${<}")"
 	cd $(PKG_BASE_DIR) && $(QQ)$(UNZIP_HERE) $<
 	$(QQ)ln -s $(PKG_ARCHIVE_DIR) $(PKG_SOURCE_DIR)
+	cd $(PKG_BASE_DIR) && $(foreach p,$(PKG_PATCHES),patch -p0 < $(p))
 	mkdir $(PKG_BUILD_DIR)
 
 $(PKG_BASE_DIR)/$(PKG_NAME)-$(PKG_VERSION).$(PKG_EXT): $(PKG_BASE_DIR)/
