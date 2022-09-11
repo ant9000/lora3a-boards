@@ -29,7 +29,7 @@ static const  saul_gpio_params_t saul_gpio_params[] =
         .name = "Enable ACME Sensor 1",
         .pin = GPIO_PIN(PA, 28),
         .mode = GPIO_OUT,
-        .flags = SAUL_GPIO_INIT_CLEAR,
+        .flags = SAUL_GPIO_INIT_SET,
     },
     {
         .name = "Enable ACME Sensor 2",

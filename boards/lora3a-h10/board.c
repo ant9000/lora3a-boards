@@ -13,6 +13,12 @@ void board_init(void)
     /* initialize the CPU */
 //    cpu_init();
 
+/* set I/O pins in lowest power */
+    gpio_init(GPIO_PIN(PA, 4), GPIO_IN_PU);
+    gpio_init(GPIO_PIN(PA, 5), GPIO_IN_PU);
+//    gpio_init(GPIO_PIN(PB, 2), GPIO_IN_PU);
+//    gpio_init(GPIO_PIN(PB, 3), GPIO_IN_PU);
+
 /* add pullups to UART0 pins */
     PORT->Group[PA].PINCFG[22].bit.PULLEN = 1;
     PORT->Group[PA].PINCFG[23].bit.PULLEN = 1;
@@ -20,7 +26,7 @@ void board_init(void)
     /* initialize board specific pins for LoRa */
 #ifdef MODULE_SX127X
     gpio_init(TCXO_PWR_PIN, GPIO_OUT);
-    gpio_set(TCXO_PWR_PIN);
+    gpio_clear(TCXO_PWR_PIN);
     gpio_init(TX_OUTPUT_SEL_PIN, GPIO_OUT);
     gpio_write(TX_OUTPUT_SEL_PIN, !SX127X_PARAM_PASELECT);
 #endif /* USEMODULE_SX127X */
