@@ -13,12 +13,6 @@ void board_init(void)
     /* initialize the CPU */
 //    cpu_init();
 
-/* set I/O pins in lowest power */
-    gpio_init(GPIO_PIN(PA, 4), GPIO_IN_PU);
-    gpio_init(GPIO_PIN(PA, 5), GPIO_IN_PU);
-//    gpio_init(GPIO_PIN(PB, 2), GPIO_IN_PU);
-//    gpio_init(GPIO_PIN(PB, 3), GPIO_IN_PU);
-
 /* add pullups to UART0 pins */
     PORT->Group[PA].PINCFG[22].bit.PULLEN = 1;
     PORT->Group[PA].PINCFG[23].bit.PULLEN = 1;
@@ -30,4 +24,23 @@ void board_init(void)
     gpio_init(TX_OUTPUT_SEL_PIN, GPIO_OUT);
     gpio_write(TX_OUTPUT_SEL_PIN, !SX127X_PARAM_PASELECT);
 #endif /* USEMODULE_SX127X */
+
+#if defined(BME688_ACME1)
+	puts("BME688 on ACME Sensor 1\n");
+	#define BME688_ENABLE  GPIO_PIN(PA, 28)
+#else
+    // disable i2c port on acme sensor 1
+    gpio_init(GPIO_PIN(PB, 2), GPIO_IN_PU);
+    gpio_init(GPIO_PIN(PB, 3), GPIO_IN_PU);
+#endif
+#if defined(BME688_ACME2)
+	puts("BME688 on ACME Sensor 2\n");
+	#define BME688_ENABLE  GPIO_PIN(PA, 31)
+#else
+    // disable i2c port on acme sensor 2
+    gpio_init(GPIO_PIN(PA, 4), GPIO_IN_PU);
+    gpio_init(GPIO_PIN(PA, 5), GPIO_IN_PU);
+#endif
+
+
 }
