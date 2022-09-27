@@ -24,7 +24,9 @@ endif
 
 CMAKE_MINIMAL_VERSION = 3.6.0
 
-CFLAGS = $(INCLUDES)
+CFLAGS += $(INCLUDES)
+CFLAGS += -Wno-old-style-definition
+CFLAGS += -Wno-maybe-uninitialized
 
 TOOLCHAIN_FILE = $(PKG_SOURCE_DIR)/xcompile-toolchain.cmake
 
