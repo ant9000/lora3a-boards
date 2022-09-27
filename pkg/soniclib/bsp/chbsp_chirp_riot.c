@@ -14,35 +14,51 @@
 #define CHBSP_RTC_CAL_PULSE_MS (100)
 
 #define LORA3A_SENSOR2_POWER    GPIO_PIN(PA, 31)
+#define CHIRP_DEBUG_PIN         GPIO_PIN(PA, 28)
 
-#define CHIP_PROG_0             GPIO_PIN(PA, 7)
-#define CHIP_I2C_0              I2C_DEV(2)
+#define CHIRP_PROG_0             GPIO_PIN(PA, 7)
+#define CHIRP_PIN_0              GPIO_PIN(PA, 6)
+#define CHIRP_I2C_0              I2C_DEV(2)
+
+static uint8_t chirp_i2c_addrs[] = {41};
+static uint8_t chirp_i2c_buses[] = {CHIRP_I2C_0};
+uint32_t chirp_pin_prog[] = { CHIRP_PROG_0 };
+uint32_t chirp_pin_io[]   = { CHIRP_PIN_0 };
+
 // END
 
 static void find_sensors(void) {
     uint8_t sig_bytes[2];
 
+    chbsp_i2c_init();
+
     /* Deassert PROG on all sensor ports */
-    gpio_init(CHIP_PROG_0, GPIO_OUT);
-    gpio_set(CHIP_PROG_0);
+    gpio_init(CHIRP_PROG_0, GPIO_OUT);
+    gpio_set(CHIRP_PROG_0);
 
     /* Power on sensor busses */
+    gpio_init(LORA3A_SENSOR2_POWER, GPIO_OUT);
+    gpio_clear(LORA3A_SENSOR2_POWER);
+    chbsp_delay_us(50000);
     gpio_set(LORA3A_SENSOR2_POWER);
     chbsp_delay_us(5000);
 
     /* check sensor 0 */
-    gpio_clear(CHIP_PROG_0);
-    i2c_acquire(CHIP_I2C_0);
+    gpio_clear(CHIRP_PROG_0);
+
     sig_bytes[0] = 0;
     sig_bytes[1] = 0;
-    i2c_read_regs(CHIP_I2C_0, CH_I2C_ADDR_PROG, 0x00, sig_bytes, 2, 0);
+
+    i2c_acquire(CHIRP_I2C_0);
+    i2c_read_regs(CHIRP_I2C_0, CH_I2C_ADDR_PROG, 0x00, sig_bytes, 2, 0);
+    i2c_release(CHIRP_I2C_0);
     printf("Chirp sensor 0 ");
     if ((sig_bytes[0] == CH_SIG_BYTE_0) && (sig_bytes[1] == CH_SIG_BYTE_1)) {
         printf("found\n");
     } else {
         printf("not found\n");
     }
-    gpio_set(CHIP_PROG_0);
+    gpio_set(CHIRP_PROG_0);
 }
 
 void chbsp_board_init(ch_group_t *grp_ptr) {
@@ -51,24 +67,48 @@ void chbsp_board_init(ch_group_t *grp_ptr) {
     grp_ptr->num_buses = CHBSP_NUM_BUSES;
     grp_ptr->rtc_cal_pulse_ms = CHBSP_RTC_CAL_PULSE_MS;
 
+    gpio_init(CHIRP_DEBUG_PIN, GPIO_OUT);
+    gpio_clear(CHIRP_DEBUG_PIN);
+
     /* Probe I2C bus to find connected sensor(s) */
     find_sensors();
 }
 
 void chbsp_delay_us(uint32_t us) {
-  ztimer_sleep(ZTIMER_USEC, us);
+    ztimer_sleep(ZTIMER_USEC, us);
 }
 void chbsp_delay_ms(uint32_t ms) {
-  ztimer_sleep(ZTIMER_MSEC, ms);
+    ztimer_sleep(ZTIMER_MSEC, ms);
+}
+
+uint32_t chbsp_timestamp_ms(void) {
+    return ztimer_now(ZTIMER_MSEC);
 }
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
-void chbsp_reset_assert(void) { }
-void chbsp_reset_release(void) { }
-void chbsp_program_enable(ch_dev_t *dev_ptr) { }
-void chbsp_program_disable(ch_dev_t *dev_ptr) { }
+void chbsp_reset_assert(void) {
+    gpio_clear(LORA3A_SENSOR2_POWER);
+    chbsp_delay_us(50000);
+puts("RESET ASSERT");
+}
+void chbsp_reset_release(void) {
+    gpio_set(LORA3A_SENSOR2_POWER);
+    chbsp_delay_us(5000);
+puts("RESET RELEASE");
+}
+void chbsp_program_enable(ch_dev_t *dev_ptr) {
+    uint8_t dev_num = ch_get_dev_num(dev_ptr);
+    gpio_clear(chirp_pin_prog[dev_num]);
+puts("PROGRAM ENABLE");
+}
+void chbsp_program_disable(ch_dev_t *dev_ptr) {
+    uint8_t dev_num = ch_get_dev_num(dev_ptr);
+    gpio_set(chirp_pin_prog[dev_num]);
+puts("PROGRAM DISABLE");
+}
+/*** ***/
 void chbsp_group_set_int1_dir_out(ch_group_t *grp_ptr) { }
 void chbsp_set_int1_dir_out(ch_dev_t *dev_ptr) { }
 void chbsp_group_set_int1_dir_in(ch_group_t *grp_ptr) { }
@@ -80,13 +120,85 @@ void chbsp_int1_interrupt_enable(ch_dev_t *dev_ptr) { }
 void chbsp_group_int1_interrupt_disable(ch_group_t *grp_ptr) { }
 void chbsp_int1_interrupt_disable(ch_dev_t *dev_ptr) { }
 void chbsp_int1_callback_set(ch_io_int_callback_t callback_func_ptr) { }
-int chbsp_i2c_init(void) { return 0; }
-uint8_t chbsp_i2c_get_info(ch_group_t __attribute__((unused)) *grp_ptr, uint8_t io_index, ch_i2c_info_t *info_ptr) { return 0; }
-int chbsp_i2c_write(ch_dev_t *dev_ptr, uint8_t *data, uint16_t num_bytes) { return 1; }
-int chbsp_i2c_mem_write(ch_dev_t *dev_ptr, uint16_t mem_addr, uint8_t *data, uint16_t num_bytes) { return 1; }
-int chbsp_i2c_read(ch_dev_t *dev_ptr, uint8_t *data, uint16_t num_bytes) { return 1; }
-int chbsp_i2c_mem_read(ch_dev_t *dev_ptr, uint16_t mem_addr, uint8_t *data, uint16_t num_bytes) { return 1; }
+/*** ***/
+int chbsp_i2c_init(void) {
+    i2c_init(CHIRP_I2C_0);
+    return 0;
+}
+uint8_t chbsp_i2c_get_info(ch_group_t __attribute__((unused)) *grp_ptr, uint8_t io_index, ch_i2c_info_t *info_ptr) {
+    uint8_t ret_val = 1;
+    if (io_index <= CHBSP_MAX_DEVICES) {
+        info_ptr->address = chirp_i2c_addrs[io_index];
+        info_ptr->bus_num = chirp_i2c_buses[io_index];
+        info_ptr->drv_flags = 0;    // no special I2C handling by SonicLib driver is needed
+        ret_val = 0;
+    }
+    return ret_val;
+}
+int chbsp_i2c_write(ch_dev_t *dev_ptr, uint8_t *data, uint16_t num_bytes) {
+    int error;
+    uint8_t i2c_addr = ch_get_i2c_address(dev_ptr);
+    uint8_t bus_num  = ch_get_bus(dev_ptr);
+    i2c_acquire(bus_num);
+    error = i2c_write_bytes(bus_num, i2c_addr, data, num_bytes, 0);
+    i2c_release(bus_num);
+#ifdef CHDRV_DEBUG
+    printf("i2c_write %d:0x%02x num_bytes:%d\n", bus_num, i2c_addr, num_bytes);
+    printf("[ ");
+    for(int i=0;i<num_bytes;i++){ printf("0x%02x ", data[i]); }
+    printf("] error:%d\n", error);
+#endif
+    return error;
+}
+int chbsp_i2c_mem_write(ch_dev_t *dev_ptr, uint16_t mem_addr, uint8_t *data, uint16_t num_bytes) {
+    int error;
+    uint8_t i2c_addr = ch_get_i2c_address(dev_ptr);
+    uint8_t bus_num  = ch_get_bus(dev_ptr);
+    i2c_acquire(bus_num);
+    error = i2c_write_regs(bus_num, i2c_addr, mem_addr, data, num_bytes, 0);
+    i2c_release(bus_num);
+#ifdef CHDRV_DEBUG
+    printf("i2c_mem_write %d:0x%02x mem_addr:0x%02x num_bytes:%d\n", bus_num, i2c_addr, mem_addr, num_bytes);
+    printf("[ ");
+    for(int i=0;i<num_bytes;i++){ printf("0x%02x ", data[i]); }
+    printf("] error:%d\n", error);
+#endif
+    return error;
+}
+int chbsp_i2c_read(ch_dev_t *dev_ptr, uint8_t *data, uint16_t num_bytes) {
+    int error = 1;      // default is error return
+    uint8_t i2c_addr = ch_get_i2c_address(dev_ptr);
+    uint8_t bus_num  = ch_get_bus(dev_ptr);
+    i2c_acquire(bus_num);
+    error = i2c_read_bytes(bus_num, i2c_addr, data, num_bytes, 0);
+#ifdef CHDRV_DEBUG
+    printf("i2c_read %d:0x%02x num_bytes:%d\n", bus_num, i2c_addr, num_bytes);
+    printf("[ ");
+    for(int i=0;i<num_bytes;i++){ printf("0x%02x ", data[i]); }
+    printf("] error:%d\n", error);
+#endif
+    i2c_release(bus_num);
+    return error;
+}
+int chbsp_i2c_mem_read(ch_dev_t *dev_ptr, uint16_t mem_addr, uint8_t *data, uint16_t num_bytes) {
+    int error = 1;      // default is error return
+    uint8_t i2c_addr = ch_get_i2c_address(dev_ptr);
+    uint8_t bus_num  = ch_get_bus(dev_ptr);
+    i2c_acquire(bus_num);
+chbsp_debug_on(0);
+    error = i2c_read_regs(bus_num, i2c_addr, mem_addr, data, num_bytes, 0);
+chbsp_debug_off(0);
+#ifdef CHDRV_DEBUG
+    printf("i2c_mem_read %d:0x%02x mem_addr:0x%02x num_bytes:%d\n", bus_num, i2c_addr, mem_addr, num_bytes);
+    printf("[ ");
+    for(int i=0;i<num_bytes;i++){ printf("0x%02x ", data[i]); }
+    printf("] error:%d\n", error);
+#endif
+    i2c_release(bus_num);
+    return error;
+}
 void chbsp_i2c_reset(ch_dev_t * dev_ptr) { }
+/*** ***/
 uint8_t chbsp_periodic_timer_init(uint16_t interval_ms, ch_timer_callback_t callback_func_ptr) { return 0; }
 void chbsp_periodic_timer_irq_enable(void) { }
 void chbsp_periodic_timer_irq_disable(void) { }
@@ -94,10 +206,13 @@ uint8_t chbsp_periodic_timer_start(void) { return 0; }
 uint8_t chbsp_periodic_timer_stop(void) { return 0; }
 void chbsp_periodic_timer_handler(void) { }
 void chbsp_periodic_timer_change_period(uint32_t new_period_us) { }
+/*** ***/
 void chbsp_proc_sleep(void) { }
+/*** ***/
 void chbsp_led_on(uint8_t led_num) { }
 void chbsp_led_off(uint8_t led_num) { }
 void chbsp_led_toggle(uint8_t dev_num) { }
+/*** ***/
 void chbsp_print_str(char *str) { printf("%s", str); }
 #ifdef INCLUDE_SHASTA_SUPPORT
 void chbsp_spi_cs_on(ch_dev_t *dev_ptr) { }
@@ -105,5 +220,18 @@ void chbsp_spi_cs_off(ch_dev_t *dev_ptr) { }
 int chbsp_spi_write(ch_dev_t *dev_ptr, uint8_t *data, uint16_t num_bytes) { return 0; }
 int chbsp_spi_read(ch_dev_t *dev_ptr, uint8_t *data, uint16_t num_bytes) { return 0; }
 #endif // INCLUDE_SHASTA_SUPPORT
+
+void chbsp_debug_toggle(uint8_t __attribute__((unused)) dbg_pin_num) {
+printf("chbsp_debug_toggle %d\n", dbg_pin_num);
+    gpio_toggle(CHIRP_DEBUG_PIN);
+}
+void chbsp_debug_on(uint8_t __attribute__((unused)) dbg_pin_num) {
+printf("chbsp_debug_on %d\n", dbg_pin_num);
+    gpio_set(CHIRP_DEBUG_PIN);
+}
+void chbsp_debug_off(uint8_t __attribute__((unused)) dbg_pin_num) {
+printf("chbsp_debug_off %d\n", dbg_pin_num);
+    gpio_clear(CHIRP_DEBUG_PIN);
+}
 
 #pragma GCC diagnostic pop

@@ -52,6 +52,4 @@
 /* Deactivate use of debug I2C interface */
 #define USE_STD_I2C_FOR_IQ		(1)
 
-#define CHDRV_DEBUG 1
-
 #endif /* CHIRP_BOARD_CONFIG_H */
