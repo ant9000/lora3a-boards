@@ -1,3 +1,6 @@
+USEMODULE += periph_i2c
+USEMODULE += periph_i2c_reconfigure
+
 ifneq (,$(filter netdev_default,$(USEMODULE)))
   USEMODULE += sx1276
 endif
