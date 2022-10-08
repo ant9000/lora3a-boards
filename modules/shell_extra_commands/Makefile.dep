@@ -3,5 +3,7 @@ USEMODULE += periph_i2c
 USEMODULE += periph_i2c_reconfigure
 USEMODULE += ztimer
 
-USEMODULE += i2c_scan
 USEMODULE += ps
+USEMODULE += periph_pm
+USEMODULE += saul_reg
+USEMODULE += shell_cmd_i2c_scan
