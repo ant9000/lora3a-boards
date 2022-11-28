@@ -29,6 +29,13 @@ extern "C" {
  * @brief   Arduino's digital pins mappings
  */
 #define ARDUINO_PIN_0   BTN0_PIN
+#define ARDUINO_PIN_1   GPIO_PIN(PB, 31) /* SX1276 - NSS      */
+#define ARDUINO_PIN_2   GPIO_PIN(PB, 15) /*          RESET    */
+#define ARDUINO_PIN_3   GPIO_PIN(PB, 16) /*          DIO0     */
+#define ARDUINO_PIN_4   GPIO_PIN(PA, 11) /*          DIO1     */
+#define ARDUINO_PIN_5   GPIO_PIN(PA, 12) /*          DIO2     */
+#define ARDUINO_PIN_6   GPIO_PIN(PB, 17) /*          DIO3     */
+#define ARDUINO_PIN_7   GPIO_PIN(PA, 13) /*          BAND_SEL */
 
 /**
  * @brief   Arduino's analog pins mappings

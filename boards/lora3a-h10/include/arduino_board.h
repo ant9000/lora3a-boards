@@ -11,7 +11,14 @@ extern "C" {
  * @brief   Arduino's digital pins mappings
  */
 static const gpio_t arduino_pinmap[] = {
-    ARDUINO_PIN_0
+    ARDUINO_PIN_0,
+    ARDUINO_PIN_1,
+    ARDUINO_PIN_2,
+    ARDUINO_PIN_3,
+    ARDUINO_PIN_4,
+    ARDUINO_PIN_5,
+    ARDUINO_PIN_6,
+    ARDUINO_PIN_7
 };
 
 /**
