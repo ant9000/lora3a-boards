@@ -1,0 +1,3 @@
+here := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+INCLUDES += -I$(here)/include
+INCLUDES += -I$(PKGDIRBASE)/radiolib/src

@@ -1,0 +1,14 @@
+APPLICATION = radiolib_pingpong
+BOARD ?= lora3a-h10
+RIOTBASE ?= $(CURDIR)/../../../RIOT
+LORA3ABASE ?= $(CURDIR)/../../
+EXTERNAL_BOARD_DIRS=$(LORA3ABASE)/boards
+EXTERNAL_MODULE_DIRS=$(LORA3ABASE)/modules
+EXTERNAL_PKG_DIRS=$(LORA3ABASE)/pkg
+
+DEVELHELP ?= 1
+QUIET ?= 1
+
+USEPKG += radiolib
+
+include $(RIOTBASE)/Makefile.include

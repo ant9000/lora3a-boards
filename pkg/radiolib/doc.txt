@@ -1,0 +1,7 @@
+/**
+ * @defgroup pkg_radiolib RadioLib - Arduino Universal wireless communication library
+ * @ingroup  pkg
+ * @brief    One radio library to rule them all!
+ * @see      https://github.com/jgromes/RadioLib
+ */
+
