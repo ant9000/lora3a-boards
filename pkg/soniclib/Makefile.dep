@@ -2,6 +2,7 @@ USEMODULE += ztimer
 USEMODULE += ztimer_msec
 USEMODULE += ztimer_usec
 FEATURES_REQUIRED += periph_gpio
+FEATURES_REQUIRED += periph_gpio_irq
 FEATURES_REQUIRED += periph_i2c
 
 USEMODULE += soniclib_bsp
