@@ -185,7 +185,7 @@ void chbsp_group_int1_interrupt_enable(ch_group_t *grp_ptr) {
         if (ch_sensor_is_connected(dev_ptr)) {
             cb_groups[dev_num] = grp_ptr;
             num = dev_num;
-            gpio_init_int(chirp_pin_io[dev_num], GPIO_OUT, GPIO_FALLING, _int1_callback, (void *)num);
+            gpio_init_int(chirp_pin_io[dev_num], GPIO_IN, GPIO_RISING, _int1_callback, (void *)num);
         }
     }
 }
@@ -193,7 +193,7 @@ void chbsp_int1_interrupt_enable(ch_dev_t *dev_ptr) {
     uint8_t dev_num = ch_get_dev_num(dev_ptr);
     size_t num = dev_num;
     cb_groups[dev_num] = dev_ptr->group;
-    gpio_init_int(chirp_pin_io[dev_num], GPIO_OUT, GPIO_FALLING, _int1_callback, (void *)num);
+    gpio_init_int(chirp_pin_io[dev_num], GPIO_IN, GPIO_RISING, _int1_callback, (void *)num);
 }
 void chbsp_group_int1_interrupt_disable(ch_group_t *grp_ptr) {
     uint8_t dev_num;
