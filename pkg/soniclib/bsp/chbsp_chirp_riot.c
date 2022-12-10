@@ -23,8 +23,9 @@
 
 static uint8_t chirp_i2c_addr[] = {41};
 static uint8_t chirp_i2c_bus[] = {CHIRP_I2C_0};
-uint32_t chirp_pin_prog[] = { CHIRP_PROG_0 };
-uint32_t chirp_pin_io[]   = { CHIRP_PIN_0 };
+static uint32_t chirp_pin_prog[] = { CHIRP_PROG_0 };
+static uint32_t chirp_pin_io[]   = { CHIRP_PIN_0 };
+static ch_group_t *_grp_ptr;
 
 #define CHIRP_NUMOF  (sizeof(chirp_i2c_addr)/sizeof(chirp_i2c_addr[0]))
 
@@ -80,6 +81,7 @@ void chbsp_board_init(ch_group_t *grp_ptr) {
     grp_ptr->num_ports = CHBSP_MAX_DEVICES;
     grp_ptr->num_buses = CHBSP_NUM_BUSES;
     grp_ptr->rtc_cal_pulse_ms = CHBSP_RTC_CAL_PULSE_MS;
+    _grp_ptr = grp_ptr;
 
     gpio_clear(CHIRP_DEBUG_PIN);
     chbsp_reset_assert();
@@ -123,14 +125,10 @@ void chbsp_program_disable(ch_dev_t *dev_ptr) {
 printf("PROGRAM DISABLE %d\n", dev_num);
 }
 /*** ***/
-static ch_group_t *cb_groups[CHBSP_MAX_DEVICES];
-static ch_io_int_callback_t _io_int_callback=NULL;
 static void _int1_callback(void *arg) {
     size_t num = (size_t)arg;
     uint8_t dev_num = (uint8_t)(num & 0xff);
-    if (_io_int_callback !=NULL) {
-       _io_int_callback(cb_groups[dev_num], dev_num, 0);
-    }
+    ch_interrupt(_grp_ptr, dev_num);
 }
 void chbsp_group_set_int1_dir_out(ch_group_t *grp_ptr) {
     uint8_t dev_num;
@@ -140,10 +138,12 @@ void chbsp_group_set_int1_dir_out(ch_group_t *grp_ptr) {
         if (ch_sensor_is_connected(dev_ptr))
             gpio_init(chirp_pin_io[dev_num], GPIO_OUT);
     }
+puts("DEBUG: chbsp_group_set_int1_dir_out");
 }
 void chbsp_set_int1_dir_out(ch_dev_t *dev_ptr) {
     uint8_t dev_num = ch_get_dev_num(dev_ptr);
     gpio_init(chirp_pin_io[dev_num], GPIO_OUT);
+puts("DEBUG: chbsp_set_int1_dir_out");
 }
 void chbsp_group_set_int1_dir_in(ch_group_t *grp_ptr) {
     uint8_t dev_num;
@@ -153,10 +153,12 @@ void chbsp_group_set_int1_dir_in(ch_group_t *grp_ptr) {
         if (ch_sensor_is_connected(dev_ptr))
             gpio_init(chirp_pin_io[dev_num], GPIO_IN);
     }
+puts("DEBUG: chbsp_group_set_int1_dir_in");
 }
 void chbsp_set_int1_dir_in(ch_dev_t *dev_ptr) {
     uint8_t dev_num = ch_get_dev_num(dev_ptr);
     gpio_init(chirp_pin_io[dev_num], GPIO_IN);
+puts("DEBUG: chbsp_set_int1_dir_in");
 }
 void chbsp_group_int1_clear(ch_group_t *grp_ptr) {
     uint8_t dev_num;
@@ -166,6 +168,7 @@ void chbsp_group_int1_clear(ch_group_t *grp_ptr) {
         if (ch_sensor_is_connected(dev_ptr))
             gpio_clear(chirp_pin_io[dev_num]);
     }
+puts("DEBUG: chbsp_group_int1_clear");
 }
 void chbsp_group_int1_set(ch_group_t *grp_ptr) {
     uint8_t dev_num;
@@ -175,6 +178,7 @@ void chbsp_group_int1_set(ch_group_t *grp_ptr) {
         if (ch_sensor_is_connected(dev_ptr))
             gpio_set(chirp_pin_io[dev_num]);
     }
+puts("DEBUG: chbsp_group_int1_set");
 }
 void chbsp_group_int1_interrupt_enable(ch_group_t *grp_ptr) {
     uint8_t dev_num;
@@ -183,17 +187,17 @@ void chbsp_group_int1_interrupt_enable(ch_group_t *grp_ptr) {
     {
         ch_dev_t *dev_ptr = ch_get_dev_ptr(grp_ptr, dev_num);
         if (ch_sensor_is_connected(dev_ptr)) {
-            cb_groups[dev_num] = grp_ptr;
             num = dev_num;
             gpio_init_int(chirp_pin_io[dev_num], GPIO_IN, GPIO_RISING, _int1_callback, (void *)num);
         }
     }
+puts("DEBUG: chbsp_group_int1_interrupt_enable");
 }
 void chbsp_int1_interrupt_enable(ch_dev_t *dev_ptr) {
     uint8_t dev_num = ch_get_dev_num(dev_ptr);
     size_t num = dev_num;
-    cb_groups[dev_num] = dev_ptr->group;
     gpio_init_int(chirp_pin_io[dev_num], GPIO_IN, GPIO_RISING, _int1_callback, (void *)num);
+puts("DEBUG: chbsp_int1_interrupt_enable");
 }
 void chbsp_group_int1_interrupt_disable(ch_group_t *grp_ptr) {
     uint8_t dev_num;
@@ -204,13 +208,12 @@ void chbsp_group_int1_interrupt_disable(ch_group_t *grp_ptr) {
             gpio_irq_disable(chirp_pin_io[dev_num]);
         }
     }
+puts("DEBUG: chbsp_group_int1_interrupt_disable");
 }
 void chbsp_int1_interrupt_disable(ch_dev_t *dev_ptr) {
     uint8_t dev_num = ch_get_dev_num(dev_ptr);
     gpio_irq_disable(chirp_pin_io[dev_num]);
-}
-void chbsp_int1_callback_set(ch_io_int_callback_t callback_func_ptr) {
-    _io_int_callback = callback_func_ptr;
+puts("DEBUG: chbsp_int1_interrupt_disable");
 }
 /*** ***/
 int chbsp_i2c_init(void) {
@@ -302,7 +305,11 @@ uint8_t chbsp_periodic_timer_stop(void) { return 0; }
 void chbsp_periodic_timer_handler(void) { }
 void chbsp_periodic_timer_change_period(uint32_t new_period_us) { }
 /*** ***/
-void chbsp_proc_sleep(void) { }
+void chbsp_proc_sleep(void) {
+// FIXME
+  ztimer_sleep(ZTIMER_MSEC, 500);
+puts("DEBUG: chbsp_proc_sleep");
+}
 /*** ***/
 void chbsp_led_on(uint8_t led_num) { }
 void chbsp_led_off(uint8_t led_num) { }
