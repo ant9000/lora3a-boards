@@ -28,6 +28,9 @@ static uint32_t chirp_pin_prog[] = { CHIRP_PROG_0 };
 static uint32_t chirp_pin_io[]   = { CHIRP_PIN_0 };
 static ch_group_t *_grp_ptr;
 static kernel_pid_t _thread;
+static ztimer_t timer;
+static uint16_t timer_interval;
+static ch_timer_callback_t timer_callback = NULL;
 
 #define CHIRP_NUMOF  (sizeof(chirp_i2c_addr)/sizeof(chirp_i2c_addr[0]))
 
@@ -292,17 +295,38 @@ chbsp_debug_off(0);
 }
 void chbsp_i2c_reset(ch_dev_t * dev_ptr) { }
 /*** ***/
-uint8_t chbsp_periodic_timer_init(uint16_t interval_ms, ch_timer_callback_t callback_func_ptr) { return 0; }
+static void _timer_callback(void *arg) {
+    (void)arg;
+    chbsp_periodic_timer_handler();
+}
+uint8_t chbsp_periodic_timer_init(uint16_t interval_ms, ch_timer_callback_t callback_func_ptr) {
+    timer_interval = interval_ms;
+    timer_callback = callback_func_ptr;
+    return 0;
+}
 void chbsp_periodic_timer_irq_enable(void) { }
 void chbsp_periodic_timer_irq_disable(void) { }
-uint8_t chbsp_periodic_timer_start(void) { return 0; }
-uint8_t chbsp_periodic_timer_stop(void) { return 0; }
-void chbsp_periodic_timer_handler(void) { }
+uint8_t chbsp_periodic_timer_start(void) {
+    uint32_t next = timer_interval;
+    timer.callback = _timer_callback;
+    ztimer_set(ZTIMER_MSEC, &timer, next);
+    return 0;
+}
+uint8_t chbsp_periodic_timer_stop(void) {
+    ztimer_remove(ZTIMER_MSEC, &timer);
+    return 0;
+}
+void chbsp_periodic_timer_handler(void) {
+    uint32_t next = timer_interval;
+    if (timer_callback != NULL) {
+        timer_callback();
+    }
+    ztimer_set(ZTIMER_MSEC, &timer, next);
+}
 void chbsp_periodic_timer_change_period(uint32_t new_period_us) { }
 /*** ***/
 void chbsp_proc_sleep(void) {
   thread_sleep();
-puts("AWAKENED");
 }
 /*** ***/
 void chbsp_led_on(uint8_t led_num) { }
