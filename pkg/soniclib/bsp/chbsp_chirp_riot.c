@@ -138,12 +138,10 @@ void chbsp_group_set_int1_dir_out(ch_group_t *grp_ptr) {
         if (ch_sensor_is_connected(dev_ptr))
             gpio_init(chirp_pin_io[dev_num], GPIO_OUT);
     }
-puts("DEBUG: chbsp_group_set_int1_dir_out");
 }
 void chbsp_set_int1_dir_out(ch_dev_t *dev_ptr) {
     uint8_t dev_num = ch_get_dev_num(dev_ptr);
     gpio_init(chirp_pin_io[dev_num], GPIO_OUT);
-puts("DEBUG: chbsp_set_int1_dir_out");
 }
 void chbsp_group_set_int1_dir_in(ch_group_t *grp_ptr) {
     uint8_t dev_num;
@@ -153,12 +151,10 @@ void chbsp_group_set_int1_dir_in(ch_group_t *grp_ptr) {
         if (ch_sensor_is_connected(dev_ptr))
             gpio_init(chirp_pin_io[dev_num], GPIO_IN);
     }
-puts("DEBUG: chbsp_group_set_int1_dir_in");
 }
 void chbsp_set_int1_dir_in(ch_dev_t *dev_ptr) {
     uint8_t dev_num = ch_get_dev_num(dev_ptr);
     gpio_init(chirp_pin_io[dev_num], GPIO_IN);
-puts("DEBUG: chbsp_set_int1_dir_in");
 }
 void chbsp_group_int1_clear(ch_group_t *grp_ptr) {
     uint8_t dev_num;
@@ -168,7 +164,6 @@ void chbsp_group_int1_clear(ch_group_t *grp_ptr) {
         if (ch_sensor_is_connected(dev_ptr))
             gpio_clear(chirp_pin_io[dev_num]);
     }
-puts("DEBUG: chbsp_group_int1_clear");
 }
 void chbsp_group_int1_set(ch_group_t *grp_ptr) {
     uint8_t dev_num;
@@ -178,7 +173,6 @@ void chbsp_group_int1_set(ch_group_t *grp_ptr) {
         if (ch_sensor_is_connected(dev_ptr))
             gpio_set(chirp_pin_io[dev_num]);
     }
-puts("DEBUG: chbsp_group_int1_set");
 }
 void chbsp_group_int1_interrupt_enable(ch_group_t *grp_ptr) {
     uint8_t dev_num;
@@ -191,13 +185,11 @@ void chbsp_group_int1_interrupt_enable(ch_group_t *grp_ptr) {
             gpio_init_int(chirp_pin_io[dev_num], GPIO_IN, GPIO_RISING, _int1_callback, (void *)num);
         }
     }
-puts("DEBUG: chbsp_group_int1_interrupt_enable");
 }
 void chbsp_int1_interrupt_enable(ch_dev_t *dev_ptr) {
     uint8_t dev_num = ch_get_dev_num(dev_ptr);
     size_t num = dev_num;
     gpio_init_int(chirp_pin_io[dev_num], GPIO_IN, GPIO_RISING, _int1_callback, (void *)num);
-puts("DEBUG: chbsp_int1_interrupt_enable");
 }
 void chbsp_group_int1_interrupt_disable(ch_group_t *grp_ptr) {
     uint8_t dev_num;
@@ -208,12 +200,10 @@ void chbsp_group_int1_interrupt_disable(ch_group_t *grp_ptr) {
             gpio_irq_disable(chirp_pin_io[dev_num]);
         }
     }
-puts("DEBUG: chbsp_group_int1_interrupt_disable");
 }
 void chbsp_int1_interrupt_disable(ch_dev_t *dev_ptr) {
     uint8_t dev_num = ch_get_dev_num(dev_ptr);
     gpio_irq_disable(chirp_pin_io[dev_num]);
-puts("DEBUG: chbsp_int1_interrupt_disable");
 }
 /*** ***/
 int chbsp_i2c_init(void) {
@@ -308,7 +298,6 @@ void chbsp_periodic_timer_change_period(uint32_t new_period_us) { }
 void chbsp_proc_sleep(void) {
 // FIXME
   ztimer_sleep(ZTIMER_MSEC, 500);
-puts("DEBUG: chbsp_proc_sleep");
 }
 /*** ***/
 void chbsp_led_on(uint8_t led_num) { }
