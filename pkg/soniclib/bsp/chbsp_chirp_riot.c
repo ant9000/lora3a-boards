@@ -313,15 +313,12 @@ int chbsp_spi_read(ch_dev_t *dev_ptr, uint8_t *data, uint16_t num_bytes) { retur
 #endif // INCLUDE_SHASTA_SUPPORT
 
 void chbsp_debug_toggle(uint8_t __attribute__((unused)) dbg_pin_num) {
-printf("chbsp_debug_toggle %d\n", dbg_pin_num);
     gpio_toggle(CHIRP_DEBUG_PIN);
 }
 void chbsp_debug_on(uint8_t __attribute__((unused)) dbg_pin_num) {
-printf("chbsp_debug_on %d\n", dbg_pin_num);
     gpio_set(CHIRP_DEBUG_PIN);
 }
 void chbsp_debug_off(uint8_t __attribute__((unused)) dbg_pin_num) {
-printf("chbsp_debug_off %d\n", dbg_pin_num);
     gpio_clear(CHIRP_DEBUG_PIN);
 }
 
