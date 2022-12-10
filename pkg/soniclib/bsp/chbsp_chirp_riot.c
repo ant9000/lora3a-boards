@@ -2,7 +2,7 @@
 #include "ztimer.h"
 #include "periph/gpio.h"
 #include "periph/i2c.h"
-#include "periph/pm.h"
+#include "thread.h"
 
 #include "soniclib.h"
 #include "chirp_bsp.h"
@@ -27,6 +27,7 @@ static uint8_t chirp_i2c_bus[] = {CHIRP_I2C_0};
 static uint32_t chirp_pin_prog[] = { CHIRP_PROG_0 };
 static uint32_t chirp_pin_io[]   = { CHIRP_PIN_0 };
 static ch_group_t *_grp_ptr;
+static kernel_pid_t _thread;
 
 #define CHIRP_NUMOF  (sizeof(chirp_i2c_addr)/sizeof(chirp_i2c_addr[0]))
 
@@ -91,6 +92,8 @@ void chbsp_board_init(ch_group_t *grp_ptr) {
 
     /* Probe I2C bus to find connected sensor(s) */
     find_sensors();
+
+    _thread = thread_getpid();
 }
 
 void chbsp_delay_us(uint32_t us) {
@@ -130,6 +133,7 @@ static void _int1_callback(void *arg) {
     size_t num = (size_t)arg;
     uint8_t dev_num = (uint8_t)(num & 0xff);
     ch_interrupt(_grp_ptr, dev_num);
+    thread_wakeup(_thread);
 }
 void chbsp_group_set_int1_dir_out(ch_group_t *grp_ptr) {
     uint8_t dev_num;
@@ -297,7 +301,8 @@ void chbsp_periodic_timer_handler(void) { }
 void chbsp_periodic_timer_change_period(uint32_t new_period_us) { }
 /*** ***/
 void chbsp_proc_sleep(void) {
-  pm_set(PM_SLEEPCFG_SLEEPMODE_STANDBY);
+  thread_sleep();
+puts("AWAKENED");
 }
 /*** ***/
 void chbsp_led_on(uint8_t led_num) { }
