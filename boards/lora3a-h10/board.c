@@ -31,16 +31,16 @@ void board_init(void)
 #else
     // disable i2c port on acme sensor 1
     i2c_deinit_pins(1);
-    gpio_init(GPIO_PIN(PB, 2), GPIO_IN_PU);
-    gpio_init(GPIO_PIN(PB, 3), GPIO_IN_PU);
+    gpio_init(GPIO_PIN(PB, 2), GPIO_IN);
+    gpio_init(GPIO_PIN(PB, 3), GPIO_IN);
 #endif
 #if defined(ENABLE_ACME2)
 	puts("Enable ACME Sensor 2\n");
 #else
     // disable i2c port on acme sensor 2
     i2c_deinit_pins(2);
-    gpio_init(GPIO_PIN(PA, 4), GPIO_IN_PU);
-    gpio_init(GPIO_PIN(PA, 5), GPIO_IN_PU);
+    gpio_init(GPIO_PIN(PA, 4), GPIO_IN);
+    gpio_init(GPIO_PIN(PA, 5), GPIO_IN);
 #endif
 
 
