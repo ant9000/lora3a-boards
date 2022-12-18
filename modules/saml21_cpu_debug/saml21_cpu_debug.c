@@ -5,7 +5,7 @@
 
 #include "board.h"
 
-void debug_saml21(void)
+void saml21_cpu_debug(void)
 {
     size_t count, num, num1;
 
