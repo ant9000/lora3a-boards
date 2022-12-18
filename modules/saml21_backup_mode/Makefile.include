@@ -1,0 +1,2 @@
+USEMODULE_INCLUDES_saml21_backup_mode := $(LAST_MAKEFILEDIR)/include
+USEMODULE_INCLUDES += $(USEMODULE_INCLUDES_saml21_backup_mode)
