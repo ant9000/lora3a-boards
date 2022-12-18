@@ -69,7 +69,13 @@ saml21_wakeup_cause_t saml21_wakeup_cause(void)
 uint8_t saml21_wakeup_pins(void)
 {
     uint8_t pins = RSTC->WKCAUSE.reg & 0xff;
-    DEBUG("Pins: 0x%02x\n", pins);
+#if ENABLE_DEBUG
+    printf("Wakeup pins: ");
+    for(int i=0; i<8; i++) {
+        if (pins & (1 << i)) { printf(" PA%02d", i); }
+    }
+    printf("\n");
+#endif
     return pins;
 }
 
@@ -85,6 +91,8 @@ void saml21_backup_mode_enter(int wakeup_pin, int sleep_secs)
         while (!(PORT->Group[0].IN.reg & (1 << extwake))) {}
         RSTC->WKEN.reg = 1 << extwake;
         RSTC->WKPOL.reg &= ~(1 << extwake);
+    } else {
+        RSTC->WKEN.reg = 0;
     }
     if (sleep_secs > 0) {
         seconds = sleep_secs;
