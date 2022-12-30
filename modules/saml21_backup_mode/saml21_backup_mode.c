@@ -99,8 +99,12 @@ void saml21_backup_mode_enter(int wakeup_pin, int sleep_secs)
     sx127x_set_sleep(&sx127x);
     spi_release(sx127x.params.spi);
     spi_deinit_pins(sx127x.params.spi);
+#ifdef TCXO_PWR_PIN
     gpio_clear(TCXO_PWR_PIN);
+#endif
+#ifdef TX_OUTPUT_SEL_PIN
     gpio_clear(TX_OUTPUT_SEL_PIN);
+#endif
 #endif
 
     if (wakeup_pin >= 0 && wakeup_pin <= 7) {
