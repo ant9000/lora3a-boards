@@ -12,5 +12,6 @@ PORT ?= /dev/ttyUSB0
 USEMODULE += saml21_cpu_debug
 USEMODULE += saml21_backup_mode
 USEMODULE += saul_default
+USEMODULE += sx1276
 
 include $(RIOTBASE)/Makefile.include
