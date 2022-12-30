@@ -6,6 +6,12 @@
 #include "periph/pm.h"
 #include "periph/rtt.h"
 
+#ifdef MODULE_SX127X
+#include "sx127x_internal.h"
+#include "sx127x_params.h"
+#include "periph/spi.h"
+#endif
+
 #define ENABLE_DEBUG 0
 #include "debug.h"
 
@@ -83,6 +89,19 @@ void saml21_backup_mode_enter(int wakeup_pin, int sleep_secs)
 {
     uint8_t extwake;
     uint32_t seconds;
+
+#ifdef MODULE_SX127X
+    // turn radio off
+    sx127x_t sx127x;
+    sx127x.params = sx127x_params[0];
+    spi_init(sx127x.params.spi);
+    sx127x_init(&sx127x);
+    sx127x_set_sleep(&sx127x);
+    spi_release(sx127x.params.spi);
+    spi_deinit_pins(sx127x.params.spi);
+    gpio_clear(TCXO_PWR_PIN);
+    gpio_clear(TX_OUTPUT_SEL_PIN);
+#endif
 
     if (wakeup_pin >= 0 && wakeup_pin <= 7) {
         extwake = wakeup_pin & 0xff;

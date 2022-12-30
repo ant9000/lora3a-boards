@@ -1,3 +1,7 @@
 FEATURES_REQUIRED += periph_gpio
 FEATURES_REQUIRED += periph_pm
 FEATURES_REQUIRED += periph_rtt
+
+ifneq (,$(filter sx1276,$(USEMODULE)))
+  USEMODULE  += periph_spi_reconfigure
+endif
