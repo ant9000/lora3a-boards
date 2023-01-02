@@ -34,7 +34,7 @@ void periodic_task(void)
 
 void poweroff_devices(void)
 {
-//  size_t i;
+    size_t i;
 
     // turn radio off
     sx127x_t sx127x;
@@ -58,6 +58,25 @@ void poweroff_devices(void)
     gpio_init(spi_pin_miso(sx127x.params.spi), GPIO_IN_PU);
     gpio_init(spi_pin_mosi(sx127x.params.spi), GPIO_IN_PD);
     gpio_init(spi_pin_clk(sx127x.params.spi), GPIO_IN_PD);
+
+    // turn other SPI devices off
+    for(i = 0; i < SPI_NUMOF; i++) {
+        if (SPI_DEV(i) != sx127x.params.spi) {
+             spi_release(SPI_DEV(i));
+             spi_deinit_pins(SPI_DEV(i));
+             gpio_init(spi_config[i].miso_pin, GPIO_IN_PU);
+             gpio_init(spi_config[i].mosi_pin, GPIO_IN_PU);
+             gpio_init(spi_config[i].clk_pin, GPIO_IN_PU);
+        }
+    }
+
+    // turn I2C devices off
+    for(i = 0; i < I2C_NUMOF; i++) {
+        i2c_release(I2C_DEV(i));
+        i2c_deinit_pins(I2C_DEV(i));
+        gpio_init(i2c_config[i].scl_pin, GPIO_IN_PU);
+        gpio_init(i2c_config[i].sda_pin, GPIO_IN_PU);
+    }
 
     saml21_cpu_debug();
 
