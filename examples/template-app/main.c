@@ -76,6 +76,10 @@ void poweroff_devices(void)
         gpio_init(uart_config[i].rx_pin, GPIO_IN_PU);
         gpio_init(uart_config[i].tx_pin, GPIO_IN_PU);
     }
+
+    // turn EIC off
+    EIC->CTRLA.bit.ENABLE = 0;
+    while (EIC->SYNCBUSY.bit.ENABLE);
 }
 
 int main(void)
