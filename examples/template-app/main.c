@@ -53,17 +53,17 @@ void poweroff_devices(void)
     for(i = 0; i < SPI_NUMOF; i++) {
         spi_release(SPI_DEV(i));
         spi_deinit_pins(SPI_DEV(i));
-        gpio_init(spi_config[i].miso_pin, GPIO_IN_PU);
-        gpio_init(spi_config[i].mosi_pin, GPIO_IN_PU);
-        gpio_init(spi_config[i].clk_pin, GPIO_IN_PU);
+        gpio_init(spi_config[i].miso_pin, GPIO_IN);
+        gpio_init(spi_config[i].mosi_pin, GPIO_IN);
+        gpio_init(spi_config[i].clk_pin, GPIO_IN);
     }
 
     // turn I2C devices off
     for(i = 0; i < I2C_NUMOF; i++) {
         i2c_release(I2C_DEV(i));
         i2c_deinit_pins(I2C_DEV(i));
-        gpio_init(i2c_config[i].scl_pin, GPIO_IN_PU);
-        gpio_init(i2c_config[i].sda_pin, GPIO_IN_PU);
+        gpio_init(i2c_config[i].scl_pin, GPIO_IN);
+        gpio_init(i2c_config[i].sda_pin, GPIO_IN);
     }
 
     saml21_cpu_debug();
@@ -72,8 +72,8 @@ void poweroff_devices(void)
     for(i = 0; i < UART_NUMOF; i++) {
         uart_poweroff(UART_DEV(i));
         uart_deinit_pins(UART_DEV(i));
-        gpio_init(uart_config[i].rx_pin, GPIO_IN_PU);
-        gpio_init(uart_config[i].tx_pin, GPIO_IN_PU);
+        gpio_init(uart_config[i].rx_pin, GPIO_IN);
+        gpio_init(uart_config[i].tx_pin, GPIO_IN);
     }
 }
 
