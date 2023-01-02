@@ -67,6 +67,10 @@ void poweroff_devices(void)
         gpio_init(i2c_config[i].sda_pin, GPIO_IN_PU);
     }
 
+    // turn EIC off
+    EIC->CTRLA.bit.ENABLE = 0;
+    while (EIC->SYNCBUSY.bit.ENABLE);
+
     saml21_cpu_debug();
 
     // turn UART devices off
@@ -76,10 +80,6 @@ void poweroff_devices(void)
         gpio_init(uart_config[i].rx_pin, GPIO_IN_PU);
         gpio_init(uart_config[i].tx_pin, GPIO_IN_PU);
     }
-
-    // turn EIC off
-    EIC->CTRLA.bit.ENABLE = 0;
-    while (EIC->SYNCBUSY.bit.ENABLE);
 }
 
 int main(void)
