@@ -55,7 +55,7 @@ void poweroff_devices(void)
 
     spi_release(sx127x.params.spi);
     spi_deinit_pins(sx127x.params.spi);
-    gpio_init(spi_pin_miso(sx127x.params.spi), GPIO_IN_PU);
+    gpio_init(spi_pin_miso(sx127x.params.spi), GPIO_IN_PD);
     gpio_init(spi_pin_mosi(sx127x.params.spi), GPIO_IN_PD);
     gpio_init(spi_pin_clk(sx127x.params.spi), GPIO_IN_PD);
 
