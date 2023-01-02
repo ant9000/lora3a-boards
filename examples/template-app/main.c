@@ -41,6 +41,7 @@ void poweroff_devices(void)
     sx127x.params = sx127x_params[0];
     spi_init(sx127x.params.spi);
     sx127x_init(&sx127x);
+    sx127x_reset(&sx127x);
     sx127x_set_sleep(&sx127x);
 #ifdef TCXO_PWR_PIN
     gpio_clear(TCXO_PWR_PIN);
@@ -75,9 +76,6 @@ void poweroff_devices(void)
         gpio_init(uart_config[i].rx_pin, GPIO_IN_PU);
         gpio_init(uart_config[i].tx_pin, GPIO_IN_PU);
     }
-
-    // gate all APBC peripheral clocks
-    MCLK->APBCMASK.reg = 0;
 }
 
 int main(void)
