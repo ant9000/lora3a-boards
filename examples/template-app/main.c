@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "saml21_cpu_debug.h"
 #include "saml21_backup_mode.h"
 
 #include "sx127x_internal.h"
@@ -64,6 +65,8 @@ void poweroff_devices(void)
         gpio_init(i2c_config[i].scl_pin, GPIO_IN_PU);
         gpio_init(i2c_config[i].sda_pin, GPIO_IN_PU);
     }
+
+    saml21_cpu_debug();
 
     // turn UART devices off
     for(i = 0; i < UART_NUMOF; i++) {
