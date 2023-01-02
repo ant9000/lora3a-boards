@@ -70,8 +70,8 @@ void poweroff_devices(void)
         }
     }
 
-    // turn I2C devices off
-    for(i = 0; i < I2C_NUMOF; i++) {
+    // turn I2C devices off (leave internal bus I2C_DEV(0) alone)
+    for(i = 1; i < I2C_NUMOF; i++) {
         i2c_release(I2C_DEV(i));
         i2c_deinit_pins(I2C_DEV(i));
         gpio_init(i2c_config[i].scl_pin, GPIO_IN_PU);
