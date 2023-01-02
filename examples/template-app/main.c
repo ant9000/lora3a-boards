@@ -68,6 +68,7 @@ void poweroff_devices(void)
     }
 
     // turn EIC off
+    GCLK->PCHCTRL[EIC_GCLK_ID].bit.CHEN = 0;
     EIC->CTRLA.bit.ENABLE = 0;
     while (EIC->SYNCBUSY.bit.ENABLE);
 
