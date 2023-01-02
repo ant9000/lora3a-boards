@@ -2,7 +2,6 @@
 #include "saml21_cpu_debug.h"
 #include "saml21_backup_mode.h"
 
-#include "sx127x_internal.h"
 #include "sx127x_params.h"
 #include "periph_conf.h"
 #include "periph/spi.h"
