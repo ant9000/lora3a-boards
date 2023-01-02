@@ -53,23 +53,6 @@ void poweroff_devices(void)
     gpio_clear(TX_OUTPUT_SEL_PIN);
 #endif
 
-    spi_release(sx127x.params.spi);
-    spi_deinit_pins(sx127x.params.spi);
-    gpio_init(spi_pin_miso(sx127x.params.spi), GPIO_IN_PD);
-    gpio_init(spi_pin_mosi(sx127x.params.spi), GPIO_IN_PD);
-    gpio_init(spi_pin_clk(sx127x.params.spi), GPIO_IN_PD);
-
-    // turn other SPI devices off
-    for(i = 0; i < SPI_NUMOF; i++) {
-        if (SPI_DEV(i) != sx127x.params.spi) {
-             spi_release(SPI_DEV(i));
-             spi_deinit_pins(SPI_DEV(i));
-             gpio_init(spi_config[i].miso_pin, GPIO_IN_PU);
-             gpio_init(spi_config[i].mosi_pin, GPIO_IN_PU);
-             gpio_init(spi_config[i].clk_pin, GPIO_IN_PU);
-        }
-    }
-
     // turn I2C devices off (leave internal bus I2C_DEV(0) alone)
     for(i = 1; i < I2C_NUMOF; i++) {
         i2c_release(I2C_DEV(i));
@@ -79,14 +62,6 @@ void poweroff_devices(void)
     }
 
     saml21_cpu_debug();
-
-    // turn UART devices off
-    for(i = 0; i < UART_NUMOF; i++) {
-        uart_poweroff(UART_DEV(i));
-        uart_deinit_pins(UART_DEV(i));
-        gpio_init(uart_config[i].rx_pin, GPIO_IN_PU);
-        gpio_init(uart_config[i].tx_pin, GPIO_IN_PU);
-    }
 }
 
 int main(void)
