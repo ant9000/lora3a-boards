@@ -75,6 +75,9 @@ void poweroff_devices(void)
         gpio_init(uart_config[i].rx_pin, GPIO_IN_PU);
         gpio_init(uart_config[i].tx_pin, GPIO_IN_PU);
     }
+
+    // gate all APBC peripheral clocks
+    MCLK->APBCMASK.reg = 0;
 }
 
 int main(void)
