@@ -13,5 +13,8 @@ USEMODULE += saml21_cpu_debug
 USEMODULE += saml21_backup_mode
 USEMODULE += saul_default
 USEMODULE += sx1276
+USEMODULE += periph_spi_reconfigure
+USEMODULE += periph_i2c_reconfigure
+USEMODULE += periph_uart_reconfigure
 
 include $(RIOTBASE)/Makefile.include
