@@ -53,9 +53,9 @@ void poweroff_devices(void)
     for(i = 0; i < SPI_NUMOF; i++) {
         spi_release(SPI_DEV(i));
         spi_deinit_pins(SPI_DEV(i));
-        gpio_init(spi_config[i].miso_pin, GPIO_IN_PU);
-        gpio_init(spi_config[i].mosi_pin, GPIO_IN_PU);
-        gpio_init(spi_config[i].clk_pin, GPIO_IN_PU);
+        gpio_init(spi_config[i].miso_pin, GPIO_IN_PD);
+        gpio_init(spi_config[i].mosi_pin, GPIO_IN_PD);
+        gpio_init(spi_config[i].clk_pin, GPIO_IN_PD);
     }
 
     // turn I2C devices off
