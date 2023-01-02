@@ -355,4 +355,9 @@ void saml21_cpu_debug(void)
     if (count == 0) {
         puts(" NONE");
     }
+
+    puts("External Interrupt Controller:");
+    char *eic_clocks[] = { "GCLK_EIC", "CLK_ULP32K" };
+    printf("EIC.CTRLA.CKSEL = %s\n", eic_clocks[EIC->CTRLA.bit.CKSEL]);
+    printf("EIC.CTRLA.ENABLE = %d\n", EIC->CTRLA.bit.ENABLE);
 }
