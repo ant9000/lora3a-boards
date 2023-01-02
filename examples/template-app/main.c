@@ -55,32 +55,19 @@ void poweroff_devices(void)
 
     spi_release(sx127x.params.spi);
     spi_deinit_pins(sx127x.params.spi);
-    gpio_init(spi_pin_miso(sx127x.params.spi), GPIO_IN_PD);
+    gpio_init(spi_pin_miso(sx127x.params.spi), GPIO_IN_PU);
     gpio_init(spi_pin_mosi(sx127x.params.spi), GPIO_IN_PD);
     gpio_init(spi_pin_clk(sx127x.params.spi), GPIO_IN_PD);
 
-//  // turn I2C devices off
-//  for(i = 0; i < I2C_NUMOF; i++) {
-//      i2c_release(I2C_DEV(i));
-//      i2c_deinit_pins(I2C_DEV(i));
-//      gpio_init(i2c_config[i].scl_pin, GPIO_IN_PU);
-//      gpio_init(i2c_config[i].sda_pin, GPIO_IN_PU);
-//  }
-
-//  // turn EIC off
-//  GCLK->PCHCTRL[EIC_GCLK_ID].bit.CHEN = 0;
-//  EIC->CTRLA.bit.ENABLE = 0;
-//  while (EIC->SYNCBUSY.bit.ENABLE);
-
     saml21_cpu_debug();
 
-//  // turn UART devices off
-//  for(i = 0; i < UART_NUMOF; i++) {
-//      uart_poweroff(UART_DEV(i));
-//      uart_deinit_pins(UART_DEV(i));
-//      gpio_init(uart_config[i].rx_pin, GPIO_IN_PU);
-//      gpio_init(uart_config[i].tx_pin, GPIO_IN_PU);
-//  }
+    // turn UART devices off
+    for(i = 0; i < UART_NUMOF; i++) {
+        uart_poweroff(UART_DEV(i));
+        uart_deinit_pins(UART_DEV(i));
+        gpio_init(uart_config[i].rx_pin, GPIO_IN_PU);
+        gpio_init(uart_config[i].tx_pin, GPIO_IN_PU);
+    }
 }
 
 int main(void)
