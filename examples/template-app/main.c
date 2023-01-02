@@ -40,6 +40,9 @@ void poweroff_devices(void)
     sx127x_t sx127x;
     sx127x.params = sx127x_params[0];
     spi_init(sx127x.params.spi);
+#ifdef TCXO_PWR_PIN
+    gpio_set(TCXO_PWR_PIN);
+#endif
     sx127x_init(&sx127x);
     sx127x_reset(&sx127x);
     sx127x_set_sleep(&sx127x);
