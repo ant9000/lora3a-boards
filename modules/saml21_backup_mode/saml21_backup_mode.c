@@ -92,10 +92,10 @@ void saml21_backup_mode_enter(saml21_extwake_t extwake, int sleep_secs)
     sx127x.params = sx127x_params[0];
     spi_release(sx127x.params.spi);
     spi_deinit_pins(sx127x.params.spi);
-    if (gpio_is_valid(sx127x.params.reset_pin)) {
-        gpio_init(sx127x.params.reset_pin, GPIO_OUT);
-        gpio_write(sx127x.params.reset_pin, SX127X_POR_ACTIVE_LOGIC_LEVEL);
-    }
+#ifdef TCXO_PWR_PIN
+    if (gpio_is_valid(TCXO_PWR_PIN)) gpio_set(TCXO_PWR_PIN);
+#endif
+    sx127x_reset(&sx127x);
     if (gpio_is_valid(sx127x.params.dio0_pin)) {
        gpio_irq_disable(sx127x.params.dio0_pin);
        gpio_init(sx127x.params.dio0_pin, SX127X_DIO_PULL_MODE);
