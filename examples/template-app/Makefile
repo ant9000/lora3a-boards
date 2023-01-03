@@ -9,6 +9,8 @@ DEVELHELP ?= 1
 QUIET ?= 1
 PORT ?= /dev/ttyUSB0
 
+USEMODULE += hdc3020
+USEMODULE += printf_float
 USEMODULE += saml21_cpu_debug
 USEMODULE += saml21_backup_mode
 USEMODULE += saul_default

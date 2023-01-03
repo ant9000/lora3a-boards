@@ -4,6 +4,8 @@
 
 #include "periph_conf.h"
 #include "periph/i2c.h"
+#include "hdc3020.h"
+#include "hdc3020_params.h"
 
 /* use { .pin=EXTWAKE_NONE } to disable */
 #define EXTWAKE { \
@@ -13,15 +15,27 @@
 #define SLEEP_TIME 5 /* in seconds; -1 to disable */
 
 static saml21_extwake_t extwake = EXTWAKE;
+static hdc3020_t hdc3020;
 
 void sensors_init(void)
 {
     puts("Sensors init.");
+    if (hdc3020_init(&hdc3020, hdc3020_params) == HDC3020_OK) {
+        puts("HDC3020 init.");
+    }
 }
 
 void sensors_read(void)
 {
+    double temp, hum;
+
     puts("Sensors read.");
+    if (hdc3020_init(&hdc3020, hdc3020_params) == HDC3020_OK) {
+        if (hdc3020_read(&hdc3020, &temp, &hum) == HDC3020_OK) {
+            printf("Temp: %.1f °C, RH: %.1f %%\n", temp, hum);
+        }
+        hdc3020_deinit(&hdc3020);
+    }
 }
 
 void lora_send_command(void)
@@ -29,9 +43,18 @@ void lora_send_command(void)
     puts("Lora send command.");
 }
 
+void wakeup_task(void)
+{
+    puts("Wakeup task.");
+    sensors_read();
+    lora_send_command();
+}
+
 void periodic_task(void)
 {
     puts("Periodic task.");
+    sensors_read();
+    lora_send_command();
 }
 
 void poweroff_devices(void)
@@ -52,8 +75,7 @@ int main(void)
 {
     switch(saml21_wakeup_cause()) {
         case BACKUP_EXTWAKE:
-            sensors_read();
-            lora_send_command();
+            wakeup_task();
             break;
         case BACKUP_RTC:
             periodic_task();
