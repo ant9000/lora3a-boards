@@ -92,14 +92,30 @@ void saml21_backup_mode_enter(saml21_extwake_t extwake, int sleep_secs)
     sx127x.params = sx127x_params[0];
     spi_init(sx127x.params.spi);
 #ifdef TCXO_PWR_PIN
-    gpio_set(TCXO_PWR_PIN);
+    if (gpio_is_valid(TCXO_PWR_PIN)) gpio_set(TCXO_PWR_PIN);
 #endif
     sx127x_reset(&sx127x);
+    if (gpio_is_valid(sx127x.params.dio0_pin)) {
+       gpio_irq_disable(sx127x.params.dio0_pin);
+       gpio_init(sx127x.params.dio0_pin, SX127X_DIO_PULL_MODE);
+    }
+    if (gpio_is_valid(sx127x.params.dio1_pin)) {
+       gpio_irq_disable(sx127x.params.dio1_pin);
+       gpio_init(sx127x.params.dio1_pin, SX127X_DIO_PULL_MODE);
+    }
+    if (gpio_is_valid(sx127x.params.dio2_pin)) {
+       gpio_irq_disable(sx127x.params.dio2_pin);
+       gpio_init(sx127x.params.dio2_pin, SX127X_DIO_PULL_MODE);
+    }
+    if (gpio_is_valid(sx127x.params.dio3_pin)) {
+       gpio_irq_disable(sx127x.params.dio3_pin);
+       gpio_init(sx127x.params.dio3_pin, SX127X_DIO_PULL_MODE);
+    }
 #ifdef TCXO_PWR_PIN
-    gpio_clear(TCXO_PWR_PIN);
+    if (gpio_is_valid(TCXO_PWR_PIN)) gpio_clear(TCXO_PWR_PIN);
 #endif
 #ifdef TX_OUTPUT_SEL_PIN
-    gpio_clear(TX_OUTPUT_SEL_PIN);
+    if (gpio_is_valid(TX_OUTPUT_SEL_PIN)) gpio_clear(TX_OUTPUT_SEL_PIN);
 #endif
 #endif
 
