@@ -1,4 +1,5 @@
-#ifndef HDC_H
+#ifndef HDC3020_H
+#define HDC3020_H
 
 #include "periph/i2c.h"
 #include "periph/gpio.h"
@@ -24,6 +25,6 @@ enum {
 
 int hdc3020_init(hdc3020_t* dev, const hdc3020_params_t* params);
 int hdc3020_read(const hdc3020_t *dev, double *temp, double *hum);
-void hdc3020_deinit(hdc3020_t* dev);
+void hdc3020_deinit(const hdc3020_t* dev);
 
-#endif /* HDC_H */
+#endif /* HDC3020_H */

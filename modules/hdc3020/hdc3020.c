@@ -22,7 +22,7 @@ int hdc3020_init(hdc3020_t* dev, const hdc3020_params_t* params)
     return HDC3020_OK;
 }
 
-void hdc3020_deinit(hdc3020_t* dev)
+void hdc3020_deinit(const hdc3020_t* dev)
 {
     if (gpio_is_valid(dev->params.enable_pin)) {
         // TODO: pin could be active low
@@ -30,7 +30,7 @@ void hdc3020_deinit(hdc3020_t* dev)
     }
 }
 
-int read_hdc3020(hdc3020_t* dev, double *temp, double *hum)
+int hdc3020_read(const hdc3020_t* dev, double *temp, double *hum)
 {
     int status = 0, retry = 10;
     uint8_t command[2] = {0x24, 0x00};

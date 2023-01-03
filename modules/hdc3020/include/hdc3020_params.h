@@ -27,13 +27,13 @@
 #endif
 
 #ifndef HDC3020_PARAMS
-#define HDC3020_PARAMS                         \
-    {                                          \
-        .i2c_dev     = HDC3020_PARAM_I2C_DEV,  \
-        .i2c_addr    = HDC3020_PARAM_I2C_ADDR, \
-        .enable_pin  = HDC3020_ENABLE_PIN,     \
-        .start_delay = HDC3020_START_DELAY,    \
-        .meas_delay  = HDC3020_MEAS_DELAY,     \
+#define HDC3020_PARAMS                           \
+    {                                            \
+        .i2c_dev       = HDC3020_PARAM_I2C_DEV,  \
+        .i2c_addr      = HDC3020_PARAM_I2C_ADDR, \
+        .enable_pin    = HDC3020_ENABLE_PIN,     \
+        .start_delay   = HDC3020_START_DELAY,    \
+        .measure_delay = HDC3020_MEAS_DELAY,     \
     }
 #endif
 
