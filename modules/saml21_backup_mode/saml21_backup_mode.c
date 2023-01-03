@@ -2,7 +2,6 @@
 #include "board.h"
 #include "saml21_backup_mode.h"
 
-#include "periph/gpio.h"
 #include "periph/pm.h"
 #include "periph/rtt.h"
 
@@ -79,18 +78,20 @@ uint8_t saml21_wakeup_pins(void)
     return pins;
 }
 
-void saml21_backup_mode_enter(int wakeup_pin, int sleep_secs)
+void saml21_backup_mode_enter(saml21_extwake_t extwake, int sleep_secs)
 {
-    uint8_t extwake;
     uint32_t seconds;
 
-    if (wakeup_pin >= 0 && wakeup_pin <= 7) {
-        extwake = wakeup_pin & 0xff;
-        gpio_init(GPIO_PIN(PA, extwake), GPIO_IN_PU);
+    if (extwake.pin != EXTWAKE_NONE) {
+        gpio_init(GPIO_PIN(PA, extwake.pin), extwake.flags);
         // wait for pin to settle
-        while (!(PORT->Group[0].IN.reg & (1 << extwake))) {}
-        RSTC->WKEN.reg = 1 << extwake;
-        RSTC->WKPOL.reg &= ~(1 << extwake);
+        while (((PORT->Group[0].IN.reg >> extwake.pin) & 1) != extwake.polarity) {}
+        RSTC->WKEN.reg = 1 << extwake.pin;
+        if (extwake.polarity == EXTWAKE_LOW) {
+            RSTC->WKPOL.reg |= (1 << extwake.pin);
+        } else {
+            RSTC->WKPOL.reg &= ~(1 << extwake.pin);
+        }
     } else {
         RSTC->WKEN.reg = 0;
     }

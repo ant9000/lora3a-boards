@@ -4,12 +4,16 @@
 
 #include "sx127x_params.h"
 #include "periph_conf.h"
-#include "periph/spi.h"
 #include "periph/i2c.h"
-#include "periph/uart.h"
 
-#define WAKEUP_PIN 6  /* from 0 = PA00 to 7 = PA07; -1 to disable; BTN_0 is 6 */
+/* use { .pin=EXTWAKE_NONE } to disable */
+#define EXTWAKE { \
+    .pin=EXTWAKE_PIN6, \
+    .polarity=EXTWAKE_HIGH, \
+    .flags=EXTWAKE_IN_PU }
 #define SLEEP_TIME 5 /* in seconds; -1 to disable */
+
+static saml21_extwake_t extwake = EXTWAKE;
 
 void sensors_init(void)
 {
@@ -59,8 +63,7 @@ void poweroff_devices(void)
         gpio_init(i2c_config[i].scl_pin, GPIO_IN_PU);
         gpio_init(i2c_config[i].sda_pin, GPIO_IN_PU);
     }
-
-    saml21_cpu_debug();
+//  saml21_cpu_debug();
 }
 
 int main(void)
@@ -74,8 +77,8 @@ int main(void)
             periodic_task();
             break;
         default:
-            if (WAKEUP_PIN > -1) {
-                printf("GPIO PA%d will wake the board.\n", WAKEUP_PIN);
+            if (extwake.pin != EXTWAKE_NONE) {
+                printf("GPIO PA%d will wake the board.\n", extwake.pin);
             }
             if (SLEEP_TIME > -1) {
                 printf("Periodic task running every %d seconds.\n", SLEEP_TIME);
@@ -86,7 +89,7 @@ int main(void)
 
     puts("Entering backup mode.");
     poweroff_devices();
-    saml21_backup_mode_enter(WAKEUP_PIN, SLEEP_TIME);
+    saml21_backup_mode_enter(extwake, SLEEP_TIME);
     // never reached
     return 0;
 }
