@@ -1,3 +1,7 @@
 FEATURES_REQUIRED += periph_gpio
 FEATURES_REQUIRED += periph_pm
 FEATURES_REQUIRED += periph_rtt
+
+ifeq (,$(filter samr34,$(CPU_MODEL)))
+  USEMODULE += sx127x
+endif
