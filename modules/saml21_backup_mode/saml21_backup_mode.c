@@ -7,7 +7,6 @@
 
 #ifdef MODULE_SX127X
 #include "sx127x_params.h"
-#include "sx127x_internal.h"
 #endif
 
 #define ENABLE_DEBUG 0
