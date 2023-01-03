@@ -91,7 +91,7 @@ void saml21_backup_mode_enter(saml21_extwake_t extwake, int sleep_secs)
     sx127x_t sx127x;
     sx127x.params = sx127x_params[0];
     spi_release(sx127x.params.spi);
-    spi_deinit_pins(sx127x.params.spi);
+    spi_deinit(sx127x.params.spi);
 #ifdef TCXO_PWR_PIN
     if (gpio_is_valid(TCXO_PWR_PIN)) gpio_set(TCXO_PWR_PIN);
 #endif
