@@ -93,7 +93,7 @@ int main(void)
 
     puts("Entering backup mode.");
     poweroff_devices();
-    saml21_backup_mode_enter(extwake, SLEEP_TIME);
+    saml21_backup_mode_enter(RADIO_OFF_REQUESTED, extwake, SLEEP_TIME);
     // never reached
     return 0;
 }

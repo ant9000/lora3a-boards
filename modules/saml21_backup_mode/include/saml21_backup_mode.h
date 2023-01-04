@@ -45,6 +45,8 @@ typedef struct {
 
 saml21_wakeup_cause_t saml21_wakeup_cause(void);
 uint8_t saml21_wakeup_pins(void);
-void saml21_backup_mode_enter(saml21_extwake_t extwake, int sleep_secs);
+void saml21_backup_mode_enter(uint8_t RadioOffRequested, saml21_extwake_t extwake, int sleep_secs);
 
+#define RADIO_OFF_NOT_REQUESTED 0
+#define RADIO_OFF_REQUESTED 1
 #endif
