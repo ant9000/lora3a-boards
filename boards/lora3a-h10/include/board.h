@@ -30,6 +30,9 @@ extern "C" {
 #define HDC3020_ENABLE_PIN  I2C0_ENABLE_PIN
 #define HDC3020_PARAM_I2C   (I2C_DEV(0))
 
+#define FRAM_ENABLE_PIN     I2C0_ENABLE_PIN
+#define FRAM_PARAM_I2C      (I2C_DEV(0))
+
 void board_init(void);
 
 #ifdef __cplusplus
