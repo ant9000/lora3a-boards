@@ -25,28 +25,10 @@ extern "C" {
 #define TCXO_PWR_PIN   GPIO_PIN(PA, 9)     /**< 32 MHz TCXO 1ppm oscillator for radio enable */
 #define TX_OUTPUT_SEL_PIN	GPIO_PIN(PA, 13)    /**< BAND_SEL */
 
-#define HDC3020_ENABLE_PIN  GPIO_PIN(PA, 27)
+#define I2C0_ENABLE_PIN     GPIO_PIN(PA, 27)
 
-//#define LED_PORT       PORT->Group[0]
-
-//#define LED0_PIN       GPIO_PIN(PA, 13)
-//#define LED0_MASK      (1 << 13)
-//#define LED0_ON        (LED_PORT.OUTCLR.reg = LED0_MASK)
-//#define LED0_OFF       (LED_PORT.OUTSET.reg = LED0_MASK)
-//#define LED0_TOGGLE    (LED_PORT.OUTTGL.reg = LED0_MASK)
-
-//#define LED1_PIN       GPIO_PIN(PA, 7)
-//#define LED1_MASK      (1 << 7)
-//#define LED1_ON        (LED_PORT.OUTCLR.reg = LED1_MASK)
-//#define LED1_OFF       (LED_PORT.OUTSET.reg = LED1_MASK)
-//#define LED1_TOGGLE    (LED_PORT.OUTTGL.reg = LED1_MASK)
-
-//#define LED2_PIN       GPIO_PIN(PA, 6)
-//#define LED2_MASK      (1 << 6)
-//#define LED2_ON        (LED_PORT.OUTCLR.reg = LED2_MASK)
-//#define LED2_OFF       (LED_PORT.OUTSET.reg = LED2_MASK)
-//#define LED2_TOGGLE    (LED_PORT.OUTTGL.reg = LED2_MASK)
-
+#define HDC3020_ENABLE_PIN  I2C0_ENABLE_PIN
+#define HDC3020_PARAM_I2C   (I2C_DEV(0))
 
 void board_init(void);
 
