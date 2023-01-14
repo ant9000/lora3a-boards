@@ -13,8 +13,7 @@ int hdc3020_init(hdc3020_t* dev, const hdc3020_params_t* params)
 
     if (gpio_is_valid(dev->params.enable_pin)) {
         gpio_init(dev->params.enable_pin, GPIO_OUT);
-        // TODO: pin could be active low
-        gpio_set(dev->params.enable_pin);
+        gpio_write(dev->params.enable_pin, dev->params.enable_on);
         ztimer_sleep(ZTIMER_USEC, dev->params.start_delay);
     }
     // TODO: check for sensor
@@ -25,8 +24,7 @@ int hdc3020_init(hdc3020_t* dev, const hdc3020_params_t* params)
 void hdc3020_deinit(const hdc3020_t* dev)
 {
     if (gpio_is_valid(dev->params.enable_pin)) {
-        // TODO: pin could be active low
-        gpio_clear(dev->params.enable_pin);
+        gpio_write(dev->params.enable_pin, 1 - dev->params.enable_on);
     }
 }
 

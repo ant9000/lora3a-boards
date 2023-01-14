@@ -8,6 +8,7 @@ typedef struct {
     i2c_t i2c_dev;                      /**< I2C device which is used */
     uint8_t i2c_addr;                   /**< I2C address */
     gpio_t enable_pin;
+    uint8_t enable_on;
     uint32_t start_delay;
     uint32_t measure_delay;
 } hdc3020_params_t;
