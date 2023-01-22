@@ -88,7 +88,7 @@ void waitCurrentMeasureBM(uint32_t milliseconds, char* step) {
 	ztimer_sleep(ZTIMER_MSEC, milliseconds);
 }	
 
-void saml21_backup_mode_enter(uint8_t RadioOffRequested, saml21_extwake_t extwake, int sleep_secs)
+void saml21_backup_mode_enter(uint8_t RadioOffRequested, saml21_extwake_t extwake, int sleep_secs, uint8_t resetCounter)
 {
     uint32_t seconds;
 if (RadioOffRequested) {
@@ -126,7 +126,8 @@ if (RadioOffRequested) {
     }
     if (sleep_secs > 0) {
         seconds = sleep_secs;
-        rtt_set_counter(0);
+        
+        if (resetCounter) rtt_set_counter(0);
         rtt_set_alarm(RTT_SEC_TO_TICKS(seconds), NULL, NULL);
     }
 //	saml21_cpu_debug();
