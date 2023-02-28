@@ -161,12 +161,17 @@ static const i2c_conf_t i2c_config[] = {
 #define ADC_PRESCALER                           ADC_CTRLB_PRESCALER_DIV256
 
 #define ADC_NEG_INPUT                           ADC_INPUTCTRL_MUXNEG(0x18u)
-#define ADC_REF_DEFAULT                         ADC_REFCTRL_REFSEL_INTREF
+#define ADC_REF_DEFAULT                         ADC_REFCTRL_REFSEL_INTREF // ADC_REFCTRL_REFSEL_INTVCC2 // ADC_REFCTRL_REFSEL_INTREF
 
 static const adc_conf_chan_t adc_channels[] = {
     /* port, pin, muxpos */
     { .inputctrl = ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC }, // mux pin is unused
     { .inputctrl = ADC_INPUTCTRL_MUXPOS_PA08 },        // Vpanel
+#if defined(RESISTOR)    
+    { .inputctrl = ADC_INPUTCTRL_MUXPOS_PA04 },        // Resistor
+    { .inputctrl = ADC_INPUTCTRL_MUXPOS_BANDGAP_Val }, // Bandgap
+    { .inputctrl = ADC_INPUTCTRL_MUXPOS_TEMP },        // Temperature
+#endif
 };
 
 

@@ -17,7 +17,11 @@ extern "C" {
                          .paselect  = (SX127X_PA_BOOST) }
 
 #define BTN0_PIN       GPIO_PIN(PA, 6)
+#if defined(CH201)
+#define BTN0_MODE      GPIO_IN
+#else
 #define BTN0_MODE      GPIO_IN_PU
+#endif
 
 //#define SX127X_PARAM_PASELECT               SX127X_PA_RFO         /**< no boost */
 #define SX127X_PARAM_PASELECT               SX127X_PA_BOOST         /**< boost */
