@@ -148,6 +148,42 @@ static const spi_conf_t spi_config[] = {
         .tx_trigger = SERCOM4_DMAC_ID_TX,
         .rx_trigger = SERCOM4_DMAC_ID_RX,
 #endif
+#if ENABLE_ACME1 == MODE_SPI
+    },
+    {
+        .dev      = &(SERCOM5->SPI),
+        .miso_pin = GPIO_PIN(PB, 3),
+        .mosi_pin = GPIO_PIN(PB, 2),
+        .clk_pin  = GPIO_PIN(PB, 23),
+        .miso_mux = GPIO_MUX_D,
+        .mosi_mux = GPIO_MUX_D,
+        .clk_mux  = GPIO_MUX_D,
+        .miso_pad = SPI_PAD_MISO_1,
+        .mosi_pad = SPI_PAD_MOSI_0_SCK_3,
+        .gclk_src = SAM0_GCLK_MAIN,
+#ifdef MODULE_PERIPH_DMA
+        .tx_trigger = SERCOM5_DMAC_ID_TX,
+        .rx_trigger = SERCOM5_DMAC_ID_RX,
+#endif
+#endif
+#if ENABLE_ACME2 == MODE_SPI
+    },
+    {
+        .dev      = &(SERCOM0->SPI),
+        .miso_pin = GPIO_PIN(PA, 5),
+        .mosi_pin = GPIO_PIN(PA, 4),
+        .clk_pin  = GPIO_PIN(PA, 7),
+        .miso_mux = GPIO_MUX_D,
+        .mosi_mux = GPIO_MUX_D,
+        .clk_mux  = GPIO_MUX_D,
+        .miso_pad = SPI_PAD_MISO_1,
+        .mosi_pad = SPI_PAD_MOSI_0_SCK_3,
+        .gclk_src = SAM0_GCLK_MAIN,
+#ifdef MODULE_PERIPH_DMA
+        .tx_trigger = SERCOM0_DMAC_ID_TX,
+        .rx_trigger = SERCOM0_DMAC_ID_RX,
+#endif
+#endif
     }
 };
 

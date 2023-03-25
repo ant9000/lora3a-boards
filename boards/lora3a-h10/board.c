@@ -19,7 +19,7 @@ void board_init(void)
     PORT->Group[PA].PINCFG[23].bit.PULLEN = 1;
 
     /* initialize board specific pins for LoRa */
-#ifdef MODULE_SX127X
+#if defined(MODULE_SX127X)
     gpio_init(TCXO_PWR_PIN, GPIO_OUT);
 //    gpio_clear(TCXO_PWR_PIN);
     gpio_set(TCXO_PWR_PIN);
