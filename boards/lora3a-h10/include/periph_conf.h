@@ -7,6 +7,10 @@
 extern "C" {
 #endif
 
+#define MODE_USART 1
+#define MODE_SPI   2
+#define MODE_I2C   3
+
 /**
  * @brief   GCLK reference speed
  */
@@ -35,15 +39,25 @@ static const tc32_conf_t timer_config[] = {
         .gclk_id        = TC0_GCLK_ID,
         .gclk_src       = SAM0_GCLK_TIMER,
         .flags          = TC_CTRLA_MODE_COUNT32,
+    },
+    {
+        .dev            = TC2,
+        .irq            = TC2_IRQn,
+        .mclk           = &MCLK->APBCMASK.reg,
+        .mclk_mask      = MCLK_APBCMASK_TC2 | MCLK_APBCMASK_TC3,
+        .gclk_id        = TC2_GCLK_ID,
+        .gclk_src       = SAM0_GCLK_TIMER,
+        .flags          = TC_CTRLA_MODE_COUNT32,
     }
 };
 
 /* Timer 0 configuration */
 #define TIMER_0_CHANNELS    2
 #define TIMER_0_ISR         isr_tc0
-#define TIMER_NUMOF         (sizeof(timer_config)/sizeof(timer_config[0]))
+#define TIMER_1_CHANNELS    2
+#define TIMER_1_ISR         isr_tc2
+#define TIMER_NUMOF         ARRAY_SIZE(timer_config)
 /** @} */
-
 
 /**
  * @name    UART configuration
@@ -63,13 +77,55 @@ static const uart_conf_t uart_config[] = {
         .tx_pad   = UART_PAD_TX_0,
         .flags    = UART_FLAG_NONE,
         .gclk_src = SAM0_GCLK_MAIN,
+#if ENABLE_ACME1 == MODE_USART
+    },
+    {    /* ACME1 USART */
+        .dev      = &SERCOM5->USART,
+        .rx_pin   = GPIO_PIN(PB, 3),
+        .tx_pin   = GPIO_PIN(PB, 2),
+#ifdef MODULE_PERIPH_UART_HW_FC
+        .rts_pin  = GPIO_UNDEF,
+        .cts_pin  = GPIO_UNDEF,
+#endif
+        .mux      = GPIO_MUX_D,
+        .rx_pad   = UART_PAD_RX_1,
+        .tx_pad   = UART_PAD_TX_0,
+        .flags    = UART_FLAG_NONE,
+        .gclk_src = SAM0_GCLK_MAIN,
+#endif
+#if ENABLE_ACME2 == MODE_USART
+    },
+    {
+        .dev      = &(SERCOM0->USART),
+        .rx_pin  = GPIO_PIN(PA, 5),
+        .tx_pin  = GPIO_PIN(PA, 4),
+#ifdef MODULE_PERIPH_UART_HW_FC
+        .rts_pin  = GPIO_UNDEF,
+        .cts_pin  = GPIO_UNDEF,
+#endif
+        .mux      = GPIO_MUX_D,
+        .rx_pad   = UART_PAD_RX_1,
+        .tx_pad   = UART_PAD_TX_0,
+        .flags    = UART_FLAG_NONE,
+        .gclk_src = SAM0_GCLK_MAIN,
+#endif
     }
 };
 
 /* interrupt function name mapping */
 #define UART_0_ISR          isr_sercom3
+#if ENABLE_ACME1 == MODE_USART
+#define UART_1_ISR          isr_sercom5
+#if ENABLE_ACME2 == MODE_USART
+#define UART_2_ISR          isr_sercom0
+#endif
+#else
+#if ENABLE_ACME2 == MODE_USART
+#define UART_1_ISR          isr_sercom0
+#endif
+#endif
 
-#define UART_NUMOF          (sizeof(uart_config) / sizeof(uart_config[0]))
+#define UART_NUMOF          ARRAY_SIZE(uart_config)
 /** @} */
 
 /**
@@ -95,7 +151,7 @@ static const spi_conf_t spi_config[] = {
     }
 };
 
-#define SPI_NUMOF           (sizeof(spi_config) / sizeof(spi_config[0]))
+#define SPI_NUMOF           ARRAY_SIZE(spi_config)
 /** @} */
 
 /**
@@ -111,27 +167,31 @@ static const i2c_conf_t i2c_config[] = {
         .mux      = GPIO_MUX_C,
         .gclk_src = SAM0_GCLK_MAIN,
         .flags    = I2C_FLAG_NONE
+#if ENABLE_ACME1 == MODE_I2C
     },
     {
         .dev      = &(SERCOM5->I2CM),
         .speed    = I2C_SPEED_NORMAL,
-        .scl_pin  = GPIO_PIN(PB, 3),   // Acme sensor 1
+        .scl_pin  = GPIO_PIN(PB, 3),
         .sda_pin  = GPIO_PIN(PB, 2),
         .mux      = GPIO_MUX_D,
         .gclk_src = SAM0_GCLK_MAIN,
         .flags    = I2C_FLAG_NONE
+#endif
+#if ENABLE_ACME2 == MODE_I2C
     },
     {
         .dev      = &(SERCOM0->I2CM),
         .speed    = I2C_SPEED_NORMAL,
-        .scl_pin  = GPIO_PIN(PA, 5),   // Acme sensor 2
+        .scl_pin  = GPIO_PIN(PA, 5),
         .sda_pin  = GPIO_PIN(PA, 4),
         .mux      = GPIO_MUX_D,
         .gclk_src = SAM0_GCLK_MAIN,
         .flags    = I2C_FLAG_NONE
+#endif
      }
 };
-#define I2C_NUMOF          (sizeof(i2c_config) / sizeof(i2c_config[0]))
+#define I2C_NUMOF          ARRAY_SIZE(i2c_config)
 /** @} */
 
 /**
@@ -167,7 +227,7 @@ static const adc_conf_chan_t adc_channels[] = {
     /* port, pin, muxpos */
     { .inputctrl = ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC }, // mux pin is unused
     { .inputctrl = ADC_INPUTCTRL_MUXPOS_PA08 },        // Vpanel
-#if defined(RESISTOR)    
+#if defined(RESISTOR)
     { .inputctrl = ADC_INPUTCTRL_MUXPOS_PA04 },        // Resistor
     { .inputctrl = ADC_INPUTCTRL_MUXPOS_BANDGAP_Val }, // Bandgap
     { .inputctrl = ADC_INPUTCTRL_MUXPOS_TEMP },        // Temperature
@@ -181,7 +241,7 @@ static const adc_conf_chan_t adc_channels[] = {
 /**
  * @name USB peripheral configuration
  * @{
- 
+
 static const sam0_common_usb_config_t sam_usbdev_config[] = {
     {
         .dm       = GPIO_PIN(PA, 24),

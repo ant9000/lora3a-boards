@@ -28,23 +28,18 @@ void board_init(void)
 #endif /* USEMODULE_SX127X */
 
 #if defined(ENABLE_ACME1)
-	puts("Enable ACME Sensor 1\n");
+	printf("Enable ACME Sensor 1 as %d\n", ENABLE_ACME1);
 #else
-    // disable i2c port on acme sensor 1
-    i2c_deinit_pins(1);
     gpio_init(GPIO_PIN(PB, 2), GPIO_IN_PU);
     gpio_init(GPIO_PIN(PB, 3), GPIO_IN_PU);
 #endif
+
 #if defined(ENABLE_ACME2)
-	puts("Enable ACME Sensor 2\n");
+	printf("Enable ACME Sensor 2 as %d\n", ENABLE_ACME2);
 #else
-    // disable i2c port on acme sensor 2
-    i2c_deinit_pins(2);
-#if !defined(RESISTOR)
+    #if !defined(RESISTOR)
     gpio_init(GPIO_PIN(PA, 4), GPIO_IN_PU);
-#endif    
+    #endif
     gpio_init(GPIO_PIN(PA, 5), GPIO_IN_PU);
 #endif
-
-
 }
