@@ -47,23 +47,20 @@ static int cmd_read(int argc, char **argv)
     uint32_t pos = atoi(argv[1]);
     uint32_t count = atoi(argv[2]);
 
-    if (count > BUFFER_SIZE) {
-        printf("Count exceeds buffer size (%d)", BUFFER_SIZE);
-        return 1;
-    }
-
     if (pos + count > AT24CXXX_EEPROM_SIZE) {
         puts("Failed: cannot read out of FRAM bounds");
         return 1;
     }
 
-    int check = at24cxxx_read(&at24cxxx_dev, pos, buffer, count);
-    buffer[count] = '\0';
-    if (check != AT24CXXX_OK) {
-        printf("ERROR: read from FRAM failed (%d)\n", check);
-        return 1;
+    for(uint32_t len = 0; len <= count; len += BUFFER_SIZE) {
+        uint32_t n = (count - len) > BUFFER_SIZE ? BUFFER_SIZE : (count - len);
+        int check = at24cxxx_read(&at24cxxx_dev, pos + len, buffer + len, n);
+        if (check != AT24CXXX_OK) {
+            printf("ERROR: read from FRAM failed (%d)\n", check);
+            return 1;
+        }
     }
-
+    buffer[count] = '\0';
     printf("Data read from FRAM (%lu bytes):\n", count);
     od_hex_dump(buffer, count, 0);
 
