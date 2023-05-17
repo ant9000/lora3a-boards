@@ -17,7 +17,7 @@ extern "C" {
 #ifdef MODULE_PERIPH_USBDEV
 #define CLOCK_CORECLOCK     (48000000U)
 #else
-#define CLOCK_CORECLOCK     (4000000U)
+#define CLOCK_CORECLOCK     (16000000U)
 #endif
 
 /**
