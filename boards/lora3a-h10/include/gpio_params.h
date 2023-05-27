@@ -20,30 +20,22 @@ static const  saul_gpio_params_t saul_gpio_params[] =
         .flags = SAUL_GPIO_INVERTED,
     },
     {
-        .name = "Enable I2C 0",
+        .name = "Enable ACME Sensor 0",
         .pin = GPIO_PIN(PA, 27),
         .mode = GPIO_OUT,
-        .flags = SAUL_GPIO_INIT_CLEAR,
+        .flags = ACME0_INIT,
     },
     {
         .name = "Enable ACME Sensor 1",
         .pin = GPIO_PIN(PA, 28),
         .mode = GPIO_OUT,
-#if defined(ENABLE_ACME1)
-        .flags = SAUL_GPIO_INIT_SET,
-#else
-        .flags = SAUL_GPIO_INIT_CLEAR,
-#endif
+        .flags = ACME1_INIT,
     },
     {
         .name = "Enable ACME Sensor 2",
         .pin = GPIO_PIN(PA, 31),
         .mode = GPIO_OUT,
-#if defined(ENABLE_ACME2)
-        .flags = SAUL_GPIO_INIT_SET,
-#else
-        .flags = SAUL_GPIO_INIT_CLEAR,
-#endif
+        .flags = ACME2_INIT,
     },
 };
 

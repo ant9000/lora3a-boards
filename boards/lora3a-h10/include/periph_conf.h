@@ -198,8 +198,8 @@ static const i2c_conf_t i2c_config[] = {
     {
         .dev      = &(SERCOM1->I2CM),
         .speed    = I2C_SPEED_NORMAL,
-        .scl_pin  = GPIO_PIN(PA, 17),  // Bus interno
-        .sda_pin  = GPIO_PIN(PA, 16),  // Bus interno
+        .scl_pin  = GPIO_PIN(PA, 17),
+        .sda_pin  = GPIO_PIN(PA, 16),
         .mux      = GPIO_MUX_C,
         .gclk_src = SAM0_GCLK_MAIN,
         .flags    = I2C_FLAG_NONE
@@ -257,7 +257,7 @@ static const i2c_conf_t i2c_config[] = {
 #define ADC_PRESCALER                           ADC_CTRLB_PRESCALER_DIV256
 
 #define ADC_NEG_INPUT                           ADC_INPUTCTRL_MUXNEG(0x18u)
-#define ADC_REF_DEFAULT                         ADC_REFCTRL_REFSEL_INTREF // ADC_REFCTRL_REFSEL_INTVCC2 // ADC_REFCTRL_REFSEL_INTREF
+#define ADC_REF_DEFAULT                         ADC_REFCTRL_REFSEL_INTREF
 
 static const adc_conf_chan_t adc_channels[] = {
     /* port, pin, muxpos */
@@ -277,7 +277,9 @@ static const adc_conf_chan_t adc_channels[] = {
 /**
  * @name USB peripheral configuration
  * @{
+*/
 
+#ifdef MODULE_PERIPH_USBDEV
 static const sam0_common_usb_config_t sam_usbdev_config[] = {
     {
         .dm       = GPIO_PIN(PA, 24),
@@ -287,7 +289,8 @@ static const sam0_common_usb_config_t sam_usbdev_config[] = {
         .gclk_src = SAM0_GCLK_48MHZ,
     }
 };
-*/
+#endif
+
 /** @} */
 
 #ifdef __cplusplus
