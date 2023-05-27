@@ -27,9 +27,7 @@ void board_init(void)
 #if defined(ENABLE_ACME2)
 	printf("Enable ACME Sensor 2 as %d\n", ENABLE_ACME2);
 #else
-    #if !defined(RESISTOR)
     gpio_init(GPIO_PIN(PA, 4), GPIO_IN_PU);
-    #endif
     gpio_init(GPIO_PIN(PA, 5), GPIO_IN_PU);
 #endif
 }

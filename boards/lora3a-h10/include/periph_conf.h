@@ -263,11 +263,6 @@ static const adc_conf_chan_t adc_channels[] = {
     /* port, pin, muxpos */
     { .inputctrl = ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC }, // mux pin is unused
     { .inputctrl = ADC_INPUTCTRL_MUXPOS_PA08 },        // Vpanel
-#if defined(RESISTOR)
-    { .inputctrl = ADC_INPUTCTRL_MUXPOS_PA04 },        // Resistor
-    { .inputctrl = ADC_INPUTCTRL_MUXPOS_BANDGAP_Val }, // Bandgap
-    { .inputctrl = ADC_INPUTCTRL_MUXPOS_TEMP },        // Temperature
-#endif
 };
 
 
