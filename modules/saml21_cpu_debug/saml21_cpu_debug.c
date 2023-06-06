@@ -360,4 +360,29 @@ void saml21_cpu_debug(void)
     char *eic_clocks[] = { "GCLK_EIC", "CLK_ULP32K" };
     printf("EIC.CTRLA.CKSEL = %s\n", eic_clocks[EIC->CTRLA.bit.CKSEL]);
     printf("EIC.CTRLA.ENABLE = %d\n", EIC->CTRLA.bit.ENABLE);
+
+    puts("RTC:");
+    RTC_MODE2_CLOCK_Type clock;
+    printf("  RTC->MODEx.CTRLA:");
+    switch (RTC->MODE0.CTRLA.bit.MODE) {
+        case RTC_MODE2_CTRLA_MODE_COUNT32_Val:
+            printf(" COUNT32");
+            break;
+        case RTC_MODE2_CTRLA_MODE_COUNT16_Val:
+            printf(" COUNT16");
+            break;
+        case RTC_MODE2_CTRLA_MODE_CLOCK_Val:
+            while (RTC->MODE2.SYNCBUSY.reg) {}
+            clock.reg = RTC->MODE2.CLOCK.reg;
+            printf(" CLOCK (%04d-%02d-%02d %02d:%02d:%02d)",
+                clock.bit.YEAR, clock.bit.MONTH, clock.bit.DAY,
+                clock.bit.HOUR, clock.bit.MINUTE, clock.bit.SECOND
+            );
+            break;
+    }
+    if (RTC->MODE0.CTRLA.bit.ENABLE) { printf(" ENABLE"); }
+    puts("");
+    for (size_t i=0; i<RTC_GPR_NUM; i++) {
+        printf("  RTC->MODEx.GP[%d] = 0x%08lx\n", i, RTC->MODE0.GP[i].reg);
+    }
 }

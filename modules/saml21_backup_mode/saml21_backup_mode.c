@@ -126,7 +126,7 @@ if (RadioOffRequested) {
     }
     if (sleep_secs > 0) {
         seconds = sleep_secs;
-        
+
         if (resetCounter) rtt_set_counter(0);
         rtt_set_alarm(RTT_SEC_TO_TICKS(seconds), NULL, NULL);
     }
