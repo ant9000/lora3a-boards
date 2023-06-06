@@ -3,7 +3,8 @@
 #include "saml21_backup_mode.h"
 
 #include "periph/pm.h"
-#include "periph/rtt.h"
+#include "periph/rtc.h"
+#include "rtc_utils.h"
 
 #ifdef MODULE_SX127X
 #include "sx127x_params.h"
@@ -86,9 +87,9 @@ uint8_t saml21_wakeup_pins(void)
 void waitCurrentMeasureBM(uint32_t milliseconds, char* step) {
 	printf("waitCurrentMeasure %s\n", step);
 	ztimer_sleep(ZTIMER_MSEC, milliseconds);
-}	
+}
 
-void saml21_backup_mode_enter(uint8_t RadioOffRequested, saml21_extwake_t extwake, int sleep_secs, uint8_t resetCounter)
+void saml21_backup_mode_enter(uint8_t RadioOffRequested, saml21_extwake_t extwake, int sleep_secs, uint8_t resetTime)
 {
     uint32_t seconds;
 if (RadioOffRequested) {
@@ -127,8 +128,16 @@ if (RadioOffRequested) {
     if (sleep_secs > 0) {
         seconds = sleep_secs;
 
-        if (resetCounter) rtt_set_counter(0);
-        rtt_set_alarm(RTT_SEC_TO_TICKS(seconds), NULL, NULL);
+        struct tm t;
+        if (resetTime) {
+            rtc_localtime(0, &t);
+            rtc_set_time(&t);
+        } else {
+            rtc_get_time(&t);
+        }
+        uint32_t alarm = rtc_mktime(&t) + seconds;
+        rtc_localtime(alarm, &t);
+        rtc_set_alarm(&t, NULL, NULL);
     }
 //	saml21_cpu_debug();
 //	waitCurrentMeasureBM(5000, "before pm");
