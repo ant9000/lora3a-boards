@@ -37,30 +37,6 @@ extern "C" {
 #define FRAM_ENABLE_PIN     I2C0_ENABLE_PIN
 #define FRAM_PARAM_I2C      (I2C_DEV(0))
 
-#ifndef ACME0_INIT
-#if ENABLE_ACME0
-#define ACME0_INIT SAUL_GPIO_INIT_SET
-#else
-#define ACME0_INIT SAUL_GPIO_INIT_CLEAR
-#endif
-#endif
-
-#ifndef ACME1_INIT
-#if ENABLE_ACME1
-#define ACME1_INIT SAUL_GPIO_INIT_SET
-#else
-#define ACME1_INIT SAUL_GPIO_INIT_CLEAR
-#endif
-#endif
-
-#ifndef ACME2_INIT
-#if ENABLE_ACME2
-#define ACME2_INIT SAUL_GPIO_INIT_SET
-#else
-#define ACME2_INIT SAUL_GPIO_INIT_CLEAR
-#endif
-#endif
-
 void board_init(void);
 
 #ifdef __cplusplus

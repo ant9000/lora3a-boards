@@ -8,6 +8,32 @@
 extern "C" {
 #endif
 
+#ifndef ACME0_INIT
+#ifdef ENABLE_ACME0
+#define ACME0_INIT 1
+#else
+#define ACME0_INIT 0
+#endif
+#endif
+
+#ifndef ACME1_INIT
+#ifdef ENABLE_ACME1
+#define ACME1_INIT 1
+#else
+#define ACME1_INIT 0
+#endif
+#endif
+
+#ifndef ACME2_INIT
+#ifdef ENABLE_ACME2
+#define ACME2_INIT 1
+#else
+#define ACME2_INIT 0
+#endif
+#endif
+
+#define SAUL_GPIO_INIT_VAL(x)    (x?SAUL_GPIO_INIT_SET:SAUL_GPIO_INIT_CLEAR)
+
 /**
  * @brief    GPIO pin configuration
  */
@@ -23,19 +49,19 @@ static const  saul_gpio_params_t saul_gpio_params[] =
         .name = "Enable ACME Sensor 0",
         .pin = GPIO_PIN(PA, 27),
         .mode = GPIO_OUT,
-        .flags = ACME0_INIT,
+        .flags = SAUL_GPIO_INIT_VAL(ACME0_INIT),
     },
     {
         .name = "Enable ACME Sensor 1",
         .pin = GPIO_PIN(PA, 28),
         .mode = GPIO_OUT,
-        .flags = ACME1_INIT,
+        .flags = SAUL_GPIO_INIT_VAL(ACME1_INIT),
     },
     {
         .name = "Enable ACME Sensor 2",
         .pin = GPIO_PIN(PA, 31),
         .mode = GPIO_OUT,
-        .flags = ACME2_INIT,
+        .flags = SAUL_GPIO_INIT_VAL(ACME2_INIT),
     },
 };
 
