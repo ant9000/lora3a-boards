@@ -113,7 +113,7 @@ if (RadioOffRequested) {
 	#endif
 }
     if (extwake.pin != EXTWAKE_NONE) {
-        gpio_init(GPIO_PIN(PA, extwake.pin), extwake.flags);
+        gpio_init(GPIO_PIN(PA, extwake.pin), (gpio_mode_t)extwake.flags);
         // wait for pin to settle
         while (((PORT->Group[0].IN.reg >> extwake.pin) & 1) != extwake.polarity) {}
         RSTC->WKEN.reg = 1 << extwake.pin;

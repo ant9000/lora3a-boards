@@ -311,13 +311,9 @@ void saml21_cpu_debug(void)
             if (sercoms[i]->USART.CTRLA.bit.RUNSTDBY) { printf(" RUNSTDBY"); }
             switch (sercoms[i]->USART.CTRLA.bit.MODE) {
                 case 1:  // USART, internal clock
-                    if (sercoms[i]->USART.CTRLA.bit.FORM < sizeof(usart_frame_formats)) {
-                         printf(" %s", usart_frame_formats[sercoms[i]->USART.CTRLA.bit.FORM]);
-                    }
+                    printf(" %s", usart_frame_formats[sercoms[i]->USART.CTRLA.bit.FORM]);
                     printf(" %sSYNC", sercoms[i]->USART.CTRLA.bit.CMODE ? "": "A");
-                    if (sercoms[i]->USART.CTRLA.bit.SAMPR < sizeof(usart_sample_rates)) {
-                         printf(" %s", usart_sample_rates[sercoms[i]->USART.CTRLA.bit.SAMPR]);
-                    }
+                    printf(" %s", usart_sample_rates[sercoms[i]->USART.CTRLA.bit.SAMPR]);
                     printf(" BAUD:0x%04x", sercoms[i]->USART.BAUD.reg);
                     break;
                 case 3:  // SPI, master
