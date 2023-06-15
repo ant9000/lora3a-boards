@@ -8,7 +8,7 @@
 #include "ztimer.h"
 #include "od.h"
 
-#define ENABLE_DEBUG (1)
+#define ENABLE_DEBUG (0)
 #include "debug.h"
 
 #define SENSEAIR_ERROR_STATUS_REG     0x00
@@ -25,6 +25,7 @@ static const char *senseair_signature="SUNR";
 
 void _print_senseair_data(const senseair_abc_data_t *abc_data)
 {
+    (void)abc_data;
 #if ENABLE_DEBUG
     printf("Signature: %s; last update: %lu\n", abc_data->signature, abc_data->last_update);
     od_hex_dump(abc_data->data, sizeof(abc_data->data), 0);
@@ -33,6 +34,7 @@ void _print_senseair_data(const senseair_abc_data_t *abc_data)
 
 void _print_time(struct tm *time)
 {
+    (void)time;
 #if ENABLE_DEBUG
     printf("%04i-%02i-%02i %02i:%02i:%02i\n",
         time->tm_year + 1900, time->tm_mon + 1, time->tm_mday,
@@ -50,7 +52,7 @@ int senseair_init(senseair_dev_t* dev, const senseair_params_t* params)
     assert(dev && params);
     dev->params = *params;
 
-    DEBUG("Activating Senseair sensor.");
+    DEBUG("Activating Senseair sensor.\n");
     gpio_init(dev->params.enable_pin, GPIO_OUT);
     gpio_set(dev->params.enable_pin);
     ztimer_sleep(ZTIMER_MSEC, 20);
@@ -62,18 +64,18 @@ int senseair_init(senseair_dev_t* dev, const senseair_params_t* params)
     }
     DEBUG("Status: 0x%04x\n", data);
     if (data == 0x8000) {
-        DEBUG("Senseair: active.");
+        DEBUG("Senseair: active.\n");
     } else {
-        DEBUG("Sensair: not found.");
+        DEBUG("Sensair: not found.\n");
         gpio_clear(dev->params.enable_pin);
         return SENSEAIR_ERR_NODEV;
     }
     i2c_read_reg(dev->params.i2c_dev, dev->params.i2c_addr, SENSEAIR_MEASURE_MODE_REG, &reg, 0);
     if (reg == 1) {
-        DEBUG("Single measurement mode: active.");
+        DEBUG("Single measurement mode: active.\n");
     } else {
         i2c_write_reg(dev->params.i2c_dev, dev->params.i2c_addr, SENSEAIR_MEASURE_MODE_REG, 1, 0);
-        DEBUG("Single measurement mode: set.");
+        DEBUG("Single measurement mode: set.\n");
     }
     return SENSEAIR_OK;
 }
