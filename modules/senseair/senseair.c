@@ -53,9 +53,12 @@ int senseair_init(senseair_t* dev, const senseair_params_t* params)
     dev->params = *params;
 
     DEBUG("Activating Senseair sensor.\n");
-    gpio_init(dev->params.enable_pin, GPIO_OUT);
-    gpio_set(dev->params.enable_pin);
-    ztimer_sleep(ZTIMER_MSEC, 20);
+    if (gpio_is_valid(dev->params.enable_pin)) {
+        gpio_init(dev->params.enable_pin, GPIO_OUT);
+        gpio_set(dev->params.enable_pin);
+        ztimer_sleep(ZTIMER_MSEC, 20);
+    }
+
     res = i2c_read_regs(dev->params.i2c_dev, dev->params.i2c_addr, SENSEAIR_ERROR_STATUS_REG, &data, 2, 0);
     if (res) {
         DEBUG("ERROR %d reading I2C.\n", res);
