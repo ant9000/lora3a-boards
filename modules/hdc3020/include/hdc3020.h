@@ -1,6 +1,7 @@
 #ifndef HDC3020_H
 #define HDC3020_H
 
+#include "saul.h"
 #include "periph/i2c.h"
 #include "periph/gpio.h"
 
@@ -16,6 +17,9 @@ typedef struct {
 typedef struct {
     hdc3020_params_t params;  /**< Device Parameters */
 } hdc3020_t;
+
+extern const saul_driver_t hdc3020_saul_temp_driver;
+extern const saul_driver_t hdc3020_saul_hum_driver;
 
 enum {
     HDC3020_OK        =  0,     /**< everything was fine */

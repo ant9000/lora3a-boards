@@ -2,9 +2,12 @@
 #define HDC3020_PARAMS_H
 
 #include "board.h"
-#include "periph/i2c.h"
-#include "periph/gpio.h"
 #include "hdc3020.h"
+#include "saul_reg.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #ifndef HDC3020_PARAM_I2C_DEV
 #define HDC3020_PARAM_I2C_DEV   I2C_DEV(0)
@@ -42,7 +45,6 @@
     }
 #endif
 
-
 static const hdc3020_params_t hdc3020_params[] =
 {
     HDC3020_PARAMS
@@ -52,5 +54,18 @@ static const hdc3020_params_t hdc3020_params[] =
  * @brief   The number of configured sensors
  */
 #define HDC3020_NUMOF    ARRAY_SIZE(hdc3020_params)
+
+#ifndef HDC3020_SAULINFO
+#define HDC3020_SAULINFO           { .name = "hdc3020" }
+#endif
+
+static const saul_reg_info_t hdc3020_saul_info[] =
+{
+    HDC3020_SAULINFO
+};
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
