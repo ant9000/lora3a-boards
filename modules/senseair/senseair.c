@@ -43,7 +43,7 @@ void _print_time(struct tm *time)
 #endif
 }
 
-int senseair_init(senseair_dev_t* dev, const senseair_params_t* params)
+int senseair_init(senseair_t* dev, const senseair_params_t* params)
 {
     int res;
     uint8_t reg;
@@ -80,7 +80,7 @@ int senseair_init(senseair_dev_t* dev, const senseair_params_t* params)
     return SENSEAIR_OK;
 }
 
-int senseair_read(const senseair_dev_t *dev, uint16_t *conc_ppm, uint16_t *temp_cC)
+int senseair_read(const senseair_t *dev, uint16_t *conc_ppm, int16_t *temp_cC)
 {
     int res, count = 0;
     uint8_t reg;
@@ -121,13 +121,13 @@ int senseair_read(const senseair_dev_t *dev, uint16_t *conc_ppm, uint16_t *temp_
             DEBUG("ERROR %d reading temperature.\n", res);
             return SENSEAIR_ERR_MEAS;
         }
-        *temp_cC = BSWAP(data);
+        *temp_cC = (int16_t)BSWAP(data);
         DEBUG("Temperature: %4.2f °C\n", (*temp_cC/100.));
     }
     return SENSEAIR_OK;
 }
 
-int senseair_write_abc_data(const senseair_dev_t *dev, senseair_abc_data_t *abc_data)
+int senseair_write_abc_data(const senseair_t *dev, senseair_abc_data_t *abc_data)
 {
     uint16_t data = 0;
     struct tm time;
@@ -160,7 +160,7 @@ int senseair_write_abc_data(const senseair_dev_t *dev, senseair_abc_data_t *abc_
     return SENSEAIR_OK;
 }
 
-int senseair_read_abc_data(const senseair_dev_t *dev, senseair_abc_data_t *abc_data)
+int senseair_read_abc_data(const senseair_t *dev, senseair_abc_data_t *abc_data)
 {
     struct tm time;
 

@@ -1,6 +1,7 @@
 #ifndef SENSEAIR_H
 #define SENSEAIR_H
 
+#include "saul.h"
 #include "periph/i2c.h"
 #include "periph/gpio.h"
 
@@ -27,11 +28,14 @@ typedef struct {
 
 typedef struct {
     senseair_params_t params;  /**< Device Parameters */
-} senseair_dev_t;
+} senseair_t;
 
-int senseair_init(senseair_dev_t* dev, const senseair_params_t* params);
-int senseair_read(const senseair_dev_t *dev, uint16_t *conc_ppm, uint16_t *temp_cC);
-int senseair_read_abc_data(const senseair_dev_t *dev, senseair_abc_data_t *abc_data);
-int senseair_write_abc_data(const senseair_dev_t *dev, senseair_abc_data_t *abc_data);
+extern const saul_driver_t senseair_saul_driver;
+extern const saul_driver_t senseair_saul_temp_driver;
+
+int senseair_init(senseair_t* dev, const senseair_params_t* params);
+int senseair_read(const senseair_t *dev, uint16_t *conc_ppm, int16_t *temp_cC);
+int senseair_read_abc_data(const senseair_t *dev, senseair_abc_data_t *abc_data);
+int senseair_write_abc_data(const senseair_t *dev, senseair_abc_data_t *abc_data);
 
 #endif /* SENSEAIR_H */
