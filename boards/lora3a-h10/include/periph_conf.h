@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-#define MODE_USART 1
+#define MODE_UART  1
 #define MODE_SPI   2
 #define MODE_I2C   3
 
@@ -77,7 +77,7 @@ static const uart_conf_t uart_config[] = {
         .tx_pad   = UART_PAD_TX_0,
         .flags    = UART_FLAG_NONE,
         .gclk_src = SAM0_GCLK_MAIN,
-#if ENABLE_ACME1 == MODE_USART
+#if ENABLE_ACME1 == MODE_UART
     },
     {    /* ACME1 USART */
         .dev      = &SERCOM5->USART,
@@ -93,7 +93,7 @@ static const uart_conf_t uart_config[] = {
         .flags    = UART_FLAG_NONE,
         .gclk_src = SAM0_GCLK_MAIN,
 #endif
-#if ENABLE_ACME2 == MODE_USART
+#if ENABLE_ACME2 == MODE_UART
     },
     {
         .dev      = &(SERCOM0->USART),
@@ -114,14 +114,17 @@ static const uart_conf_t uart_config[] = {
 
 /* interrupt function name mapping */
 #define UART_0_ISR          isr_sercom3
-#if ENABLE_ACME1 == MODE_USART
+#if ENABLE_ACME1 == MODE_UART
 #define UART_1_ISR          isr_sercom5
-#if ENABLE_ACME2 == MODE_USART
+#define ACME1_UART_DEV  UART_DEV(1)
+#if ENABLE_ACME2 == MODE_UART
 #define UART_2_ISR          isr_sercom0
+#define ACME2_UART_DEV  UART_DEV(2)
 #endif
 #else
-#if ENABLE_ACME2 == MODE_USART
+#if ENABLE_ACME2 == MODE_UART
 #define UART_1_ISR          isr_sercom0
+#define ACME2_UART_DEV  UART_DEV(1)
 #endif
 #endif
 
@@ -187,6 +190,17 @@ static const spi_conf_t spi_config[] = {
     }
 };
 
+#if ENABLE_ACME1 == MODE_SPI
+#define ACME1_SPI_DEV  SPI_DEV(1)
+#if ENABLE_ACME2 == MODE_SPI
+#define ACME2_SPI_DEV  SPI_DEV(2)
+#endif
+#else
+#if ENABLE_ACME2 == MODE_SPI
+#define ACME2_SPI_DEV  SPI_DEV(1)
+#endif
+#endif
+
 #define SPI_NUMOF           ARRAY_SIZE(spi_config)
 /** @} */
 
@@ -227,6 +241,18 @@ static const i2c_conf_t i2c_config[] = {
 #endif
      }
 };
+
+#if ENABLE_ACME1 == MODE_I2C
+#define ACME1_I2C_DEV  I2C_DEV(1)
+#if ENABLE_ACME2 == MODE_I2C
+#define ACME2_I2C_DEV  I2C_DEV(2)
+#endif
+#else
+#if ENABLE_ACME2 == MODE_I2C
+#define ACME2_I2C_DEV  I2C_DEV(1)
+#endif
+#endif
+
 #define I2C_NUMOF          ARRAY_SIZE(i2c_config)
 /** @} */
 
