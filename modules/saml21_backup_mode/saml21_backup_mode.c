@@ -12,7 +12,6 @@
 
 #define ENABLE_DEBUG 0
 #include "debug.h"
-#include "saml21_cpu_debug.h"
 
 saml21_wakeup_cause_t saml21_wakeup_cause(void)
 {
@@ -139,8 +138,6 @@ if (RadioOffRequested) {
         rtc_localtime(alarm, &t);
         rtc_set_alarm(&t, NULL, NULL);
     }
-//	saml21_cpu_debug();
-//	waitCurrentMeasureBM(5000, "before pm");
 
     pm_set(SAML21_PM_MODE_BACKUP);
 }
