@@ -3,7 +3,7 @@
 
 #include <inttypes.h>
 
-#include "embit.h"
+#include "acme_protocol.h"
 #include "net/lora.h"
 #include "net/netdev.h"
 #include "sx127x.h"
@@ -15,9 +15,9 @@
 #endif
 
 #ifndef AES
-#define MAX_PACKET_LEN (MAX_PAYLOAD_LEN + EMB_HEADER_LEN)
+#define MAX_PACKET_LEN (MAX_PAYLOAD_LEN + ACME_HEADER_LEN)
 #else
-#define MAX_PACKET_LEN (MAX_PAYLOAD_LEN + EMB_HEADER_LEN + 12 + 16)
+#define MAX_PACKET_LEN (MAX_PAYLOAD_LEN + ACME_HEADER_LEN + 12 + 16)
 #endif
 
 #ifndef DEFAULT_LORA_BANDWIDTH
@@ -39,8 +39,6 @@
 #ifndef DEFAULT_LORA_POWER
 #define DEFAULT_LORA_POWER SX127X_RADIO_TX_POWER
 #endif
-
-typedef ssize_t(consume_data_cb_t)(const embit_packet_t *packet);
 
 typedef void(lora_data_cb_t)(const char *buffer, size_t len, int16_t *rssi,
                              int8_t *snr);

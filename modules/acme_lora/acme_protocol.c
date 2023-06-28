@@ -1,3 +1,5 @@
+#include "acme_protocol.h"
+
 #include <stdio.h>
 
 #include "acme_lora.h"
@@ -43,21 +45,21 @@ void protocol_init(consume_data_cb_t *packet_consumer) {
 }
 
 void protocol_in(const char *buffer, size_t len, int16_t *rssi, int8_t *snr) {
-  embit_header_t *header;
+  acme_header_t *header;
   char *payload;
   size_t n;
   mutex_lock(&lora_lock);
-  header = (embit_header_t *)(void const *)buffer;
+  header = (acme_header_t *)(void const *)buffer;
   HEXDUMP("RECEIVED PACKET:", buffer, len);
-  if ((header->signature == EMB_SIGNATURE) && (len > EMB_HEADER_LEN)) {
-    payload = (char *)buffer + EMB_HEADER_LEN;
-    n = len - EMB_HEADER_LEN;
+  if ((header->signature == ACME_SIGNATURE) && (len > ACME_HEADER_LEN)) {
+    payload = (char *)buffer + ACME_HEADER_LEN;
+    n = len - ACME_HEADER_LEN;
 #ifndef CONFIG_AES
-    embit_packet_t packet = {.header = *header,
-                             .payload = payload,
-                             .payload_len = n,
-                             .rssi = *rssi,
-                             .snr = *snr};
+    acme_packet_t packet = {.header = *header,
+                            .payload = payload,
+                            .payload_len = n,
+                            .rssi = *rssi,
+                            .snr = *snr};
     protocol_packet_consumer(&packet);
 #else
     if (n > 12 + 16) {
@@ -71,18 +73,18 @@ void protocol_in(const char *buffer, size_t len, int16_t *rssi, int8_t *snr) {
       uint8_t verify[16];
       aes_sync_gcm_crypt_and_tag(&aes, AES_DECRYPT, (uint8_t *)payload,
                                  aes_output, n, nonce, 12, (uint8_t *)header,
-                                 EMB_HEADER_LEN, verify, 16);
+                                 ACME_HEADER_LEN, verify, 16);
       if (memcmp(tag, verify, 16) == 0) {
         // remove padding
         char c = aes_output[n - 1];
         if (c <= 16) {
           n -= c;
         }
-        embit_packet_t packet = {.header = *header,
-                                 .payload = (char *)aes_output,
-                                 .payload_len = n,
-                                 .rssi = *rssi,
-                                 .snr = *snr};
+        acme_packet_t packet = {.header = *header,
+                                .payload = (char *)aes_output,
+                                .payload_len = n,
+                                .rssi = *rssi,
+                                .snr = *snr};
         protocol_packet_consumer(&packet);
       }
     }
@@ -91,12 +93,12 @@ void protocol_in(const char *buffer, size_t len, int16_t *rssi, int8_t *snr) {
   mutex_unlock(&lora_lock);
 }
 
-void protocol_out(const embit_header_t *header, const char *buffer,
+void protocol_out(const acme_header_t *header, const char *buffer,
                   const size_t len) {
   iolist_t packet, payload;
   mutex_lock(&lora_lock);
   packet.iol_base = (void *)header;
-  packet.iol_len = EMB_HEADER_LEN;
+  packet.iol_len = ACME_HEADER_LEN;
   packet.iol_next = &payload;
 #ifndef CONFIG_AES
   payload.iol_base = (void *)buffer;
@@ -114,7 +116,7 @@ void protocol_out(const embit_header_t *header, const char *buffer,
   n += c;
   HEXDUMP("PADDED PACKET:", aes_input, n);
   aes_sync_gcm_crypt_and_tag(&aes, AES_ENCRYPT, aes_input, aes_output, n, nonce,
-                             12, (uint8_t *)header, EMB_HEADER_LEN, tag, 16);
+                             12, (uint8_t *)header, ACME_HEADER_LEN, tag, 16);
   HEXDUMP("NONCE:", nonce, 12);
   memcpy(aes_output + n, nonce, 12);
   n += 12;
