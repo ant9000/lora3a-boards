@@ -289,8 +289,8 @@ static const adc_conf_chan_t adc_channels[] = {
     /* port, pin, muxpos */
     { .inputctrl = ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC }, // mux pin is unused
     { .inputctrl = ADC_INPUTCTRL_MUXPOS_PA08 },        // Vpanel
+    { .inputctrl = ADC_INPUTCTRL_MUXPOS_BANDGAP },     // bandgap - internal 1V fixed
 };
-
 
 #define ADC_NUMOF                               ARRAY_SIZE(adc_channels)
 /** @} */
