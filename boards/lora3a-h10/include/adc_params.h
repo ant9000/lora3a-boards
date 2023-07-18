@@ -1,3 +1,6 @@
+#ifndef ADC_PARAMS_H
+#define ADC_PARAMS_H
+
 #include "board.h"
 #include "saul/periph.h"
 #include "periph/adc.h"
