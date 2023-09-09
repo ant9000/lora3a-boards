@@ -242,6 +242,8 @@ static const i2c_conf_t i2c_config[] = {
      }
 };
 
+#define ACME0_I2C_DEV I2C_DEV(0)
+
 #if ENABLE_ACME1 == MODE_I2C
 #define ACME1_I2C_DEV  I2C_DEV(1)
 #if ENABLE_ACME2 == MODE_I2C
