@@ -10,29 +10,35 @@
 #define __unused__ (void)
 
 // TODO: temporarily inline config data
-#define CHBSP_MAX_DEVICES 1
-#define CHBSP_NUM_BUSES 1
+#define CHBSP_MAX_DEVICES 2
+#define CHBSP_NUM_BUSES 2
 #define CHBSP_RTC_CAL_PULSE_MS (100)
 
+#define LORA3A_SENSOR1_POWER    GPIO_PIN(PA, 28)
 #define LORA3A_SENSOR2_POWER    GPIO_PIN(PA, 31)
-#define CHIRP_RESET_PIN         GPIO_PIN(PA, 28)
-#define CHIRP_DEBUG_PIN         GPIO_PIN(PB, 23)
 
-#define CHIRP_PROG_0             GPIO_PIN(PA, 7)
-#define CHIRP_PIN_0              GPIO_PIN(PA, 6)
-#define CHIRP_I2C_0              I2C_DEV(2)
+//#define CHIRP_RESET_PIN         GPIO_PIN(PA, 28)
+#define CHIRP_DEBUG_PIN         GPIO_PIN(PA, 25)
 
-static uint8_t chirp_i2c_addr[] = {41};
-static uint8_t chirp_i2c_bus[] = {CHIRP_I2C_0};
-static uint32_t chirp_pin_prog[] = { CHIRP_PROG_0 };
-static uint32_t chirp_pin_io[]   = { CHIRP_PIN_0 };
+#define CHIRP_PROG_0            GPIO_PIN(PB, 23)
+#define CHIRP_PIN_0             GPIO_PIN(PA, 1)
+#define CHIRP_I2C_0             I2C_DEV(1)
+
+#define CHIRP_PROG_1            GPIO_PIN(PA, 7)
+#define CHIRP_PIN_1             GPIO_PIN(PA, 6)
+#define CHIRP_I2C_1             I2C_DEV(2)
+
+static uint8_t chirp_i2c_addr[] = {41, 41};
+static uint8_t chirp_i2c_bus[] = {CHIRP_I2C_0, CHIRP_I2C_1};
+static uint32_t chirp_pin_prog[] = {CHIRP_PROG_0, CHIRP_PROG_1};
+static uint32_t chirp_pin_io[]   = {CHIRP_PIN_0, CHIRP_PIN_1};
 static ch_group_t *_grp_ptr;
 static kernel_pid_t _thread;
 static ztimer_t timer;
 static uint16_t timer_interval;
 static ch_timer_callback_t timer_callback = NULL;
 
-#define CHIRP_NUMOF  (sizeof(chirp_i2c_addr)/sizeof(chirp_i2c_addr[0]))
+#define CHIRP_NUMOF  ARRAY_SIZE(chirp_i2c_addr)
 
 // END
 
@@ -71,14 +77,18 @@ static void find_sensors(void) {
 }
 
 void chbsp_board_init(ch_group_t *grp_ptr) {
+    gpio_init(LORA3A_SENSOR1_POWER, GPIO_OUT);
     gpio_init(LORA3A_SENSOR2_POWER, GPIO_OUT);
+/*
     gpio_init(CHIRP_RESET_PIN, GPIO_OUT);
+*/
     gpio_init(CHIRP_DEBUG_PIN, GPIO_OUT);
     for (uint8_t i = 0; i < CHIRP_NUMOF; i++) {
         gpio_init(chirp_pin_prog[i], GPIO_OUT);
     }
 
     /* Power on sensor busses */
+    gpio_set(LORA3A_SENSOR1_POWER);
     gpio_set(LORA3A_SENSOR2_POWER);
     chbsp_delay_us(5000);
 
@@ -114,12 +124,16 @@ uint32_t chbsp_timestamp_ms(void) {
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
 void chbsp_reset_assert(void) {
-    gpio_set(CHIRP_RESET_PIN);
+/*
+  gpio_set(CHIRP_RESET_PIN);
 puts("RESET ASSERT");
+*/
 }
 void chbsp_reset_release(void) {
+/*
     gpio_clear(CHIRP_RESET_PIN);
 puts("RESET RELEASE");
+*/
 }
 void chbsp_program_enable(ch_dev_t *dev_ptr) {
     uint8_t dev_num = ch_get_dev_num(dev_ptr);
