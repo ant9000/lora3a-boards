@@ -88,7 +88,7 @@ void waitCurrentMeasureBM(uint32_t milliseconds, char* step) {
 	ztimer_sleep(ZTIMER_MSEC, milliseconds);
 }
 
-void saml21_backup_mode_enter(uint8_t RadioOffRequested, saml21_extwake_t extwake, int sleep_secs, uint8_t resetTime)
+void saml21_backup_mode_enter(uint8_t RadioOffRequested, saml21_extwake_t *extwake, int num_pins, int sleep_secs, uint8_t resetTime)
 {
     uint32_t seconds;
 if (RadioOffRequested) {
@@ -111,18 +111,19 @@ if (RadioOffRequested) {
 	#endif
 	#endif
 }
-    if (extwake.pin != EXTWAKE_NONE) {
-        gpio_init(GPIO_PIN(PA, extwake.pin), (gpio_mode_t)extwake.flags);
-        // wait for pin to settle
-        while (((PORT->Group[0].IN.reg >> extwake.pin) & 1) != extwake.polarity) {}
-        RSTC->WKEN.reg = 1 << extwake.pin;
-        if (extwake.polarity == EXTWAKE_LOW) {
-            RSTC->WKPOL.reg |= (1 << extwake.pin);
-        } else {
-            RSTC->WKPOL.reg &= ~(1 << extwake.pin);
+    RSTC->WKEN.reg = 0;
+    if (num_pins > 0) {
+        for (int i=0; i<num_pins; i++) {
+            gpio_init(GPIO_PIN(PA, extwake[i].pin), (gpio_mode_t)extwake[i].flags);
+            // wait for pin to settle
+            while (((PORT->Group[0].IN.reg >> extwake[i].pin) & 1) != extwake[i].polarity) {}
+            RSTC->WKEN.reg |= 1 << extwake[i].pin;
+            if (extwake[i].polarity == EXTWAKE_LOW) {
+                RSTC->WKPOL.reg |= (1 << extwake[i].pin);
+            } else {
+                RSTC->WKPOL.reg &= ~(1 << extwake[i].pin);
+            }
         }
-    } else {
-        RSTC->WKEN.reg = 0;
     }
     if (sleep_secs > 0) {
         seconds = sleep_secs;
