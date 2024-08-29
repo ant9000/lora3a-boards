@@ -16,7 +16,7 @@ typedef enum {
 } saml21_wakeup_cause_t;
 
 typedef enum {
-    EXTWAKE_NONE = 0,
+    EXTWAKE_NONE = -1,
     EXTWAKE_PIN0,
     EXTWAKE_PIN1,
     EXTWAKE_PIN2,
