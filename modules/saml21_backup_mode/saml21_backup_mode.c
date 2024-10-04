@@ -90,7 +90,7 @@ void waitCurrentMeasureBM(uint32_t milliseconds, char* step) {
 	ztimer_sleep(ZTIMER_MSEC, milliseconds);
 }
 
-void saml21_backup_mode_enter(uint8_t RadioOffRequested, saml21_extwake_t extwake, int sleep_secs,
+void saml21_backup_mode_enter(uint8_t RadioOffRequested, saml21_extwake_t *extwake, int sleep_secs,
                               uint8_t resetTime)
 {
     uint32_t seconds;
@@ -116,34 +116,46 @@ void saml21_backup_mode_enter(uint8_t RadioOffRequested, saml21_extwake_t extwak
         spi_deinit_pins(sx127x.params.spi);
     #endif
     }
-    DEBUG("extwake.pin=%d; extwake.polarity=%d\n",extwake.pin, extwake.polarity);
-    if (extwake.pin != EXTWAKE_NONE) {
-        gpio_init(GPIO_PIN(PA, extwake.pin), (gpio_mode_t)extwake.flags);
 
-        // wait for pin to settle
-        uint8_t retry = 5;
-        while (retry > 0) {
-            retry--;
-            if (((PORT->Group[0].IN.reg >> extwake.pin) & 1) == extwake.polarity) {
+    if (extwake != NULL) {
+        int pin_count = 0;
+        for (int i=0; i<8; i++) {
+            saml21_extwake_t *e = &extwake[i];
+            if (e->pin == EXTWAKE_NONE) {
                 break;
             }
-            ztimer_sleep(ZTIMER_MSEC, 10);
-        }
-        DEBUG("RETRY EXTWAKE: %d.\n", retry);
-        if (retry == 0) {
-            printf("EXTWAKE PIN STUCK %s.\n",
-                   ((PORT->Group[0].IN.reg >> extwake.pin) & 1) ? "HIGH": "LOW");
-            emergency_sleep = 1;
-            RSTC->WKEN.reg = 0;
-        }
-        else {
-            RSTC->WKEN.reg = 1 << extwake.pin;
-            if (extwake.polarity == EXTWAKE_LOW) {
-                RSTC->WKPOL.reg |= (1 << extwake.pin);
+            pin_count++;
+            DEBUG("extwake[%d].pin=%d; extwake[%d].polarity=%d\n", i, e->pin, i, e->polarity);
+            gpio_init(GPIO_PIN(PA, e->pin), (gpio_mode_t)e->flags);
+
+            // wait for pin to settle
+            uint8_t retry = 5;
+            while (retry > 0) {
+                retry--;
+                if (((PORT->Group[0].IN.reg >> e->pin) & 1) == e->polarity) {
+                    break;
+                }
+                ztimer_sleep(ZTIMER_MSEC, 10);
+            }
+            DEBUG("RETRY EXTWAKE: %d.\n", retry);
+            if (retry == 0) {
+                printf("EXTWAKE PIN STUCK %s.\n",
+                       ((PORT->Group[0].IN.reg >> e->pin) & 1) ? "HIGH": "LOW");
+                emergency_sleep++;
             }
             else {
-                RSTC->WKPOL.reg &= ~(1 << extwake.pin);
+                RSTC->WKEN.reg |= 1 << e->pin;
+                if (e->polarity == EXTWAKE_LOW) {
+                    RSTC->WKPOL.reg |= (1 << e->pin);
+                }
+                else {
+                    RSTC->WKPOL.reg &= ~(1 << e->pin);
+                }
             }
+        }
+        if (pin_count && emergency_sleep == pin_count) {
+            DEBUG("All pins are stuck: disabling wakeup on GPIO.\n");
+            RSTC->WKEN.reg = 0;
         }
     }
     else {
