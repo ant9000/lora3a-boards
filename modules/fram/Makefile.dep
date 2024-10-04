@@ -1,2 +1,3 @@
 FEATURES_REQUIRED += periph_gpio
-USEMODULE  += at24c16a
+#USEMODULE  += at24c16a
+USEMODULE  += at24c64

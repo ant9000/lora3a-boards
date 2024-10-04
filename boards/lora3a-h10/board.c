@@ -2,6 +2,9 @@
 
 #include "board.h"
 #include "periph/gpio.h"
+#define ENABLE_DEBUG 0
+
+#include "debug.h"
 
 void board_init(void)
 {
@@ -18,14 +21,14 @@ void board_init(void)
 #endif /* USEMODULE_SX127X */
 
 #if defined(ENABLE_ACME1)
-	printf("Enable ACME Sensor 1 as %d\n", ENABLE_ACME1);
+	DEBUG("Enable ACME Sensor 1 as %d\n", ENABLE_ACME1);
 #else
     gpio_init(GPIO_PIN(PB, 2), GPIO_IN_PU);
     gpio_init(GPIO_PIN(PB, 3), GPIO_IN_PU);
 #endif
 
 #if defined(ENABLE_ACME2)
-	printf("Enable ACME Sensor 2 as %d\n", ENABLE_ACME2);
+	DEBUG("Enable ACME Sensor 2 as %d\n", ENABLE_ACME2);
 #else
     gpio_init(GPIO_PIN(PA, 4), GPIO_IN_PU);
     gpio_init(GPIO_PIN(PA, 5), GPIO_IN_PU);

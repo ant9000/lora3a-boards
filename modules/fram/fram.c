@@ -15,6 +15,9 @@
 
 #include "at24cxxx.h"
 #include "at24cxxx_params.h"
+#define ENABLE_DEBUG 0
+
+#include "debug.h"
 
 static at24cxxx_t at24cxxx_dev;
 
@@ -38,8 +41,8 @@ void fram_off(void)
 
 int fram_init(void)
 {
-    printf("FRAM size: %u byte\n", AT24CXXX_EEPROM_SIZE);
-    printf("Page size  : %u byte\n", AT24CXXX_PAGE_SIZE);
+    DEBUG("FRAM size: %u byte\n", AT24CXXX_EEPROM_SIZE);
+    DEBUG("Page size  : %u byte\n", AT24CXXX_PAGE_SIZE);
 #if defined(FRAM_ENABLE_PIN)
     if (gpio_is_valid(FRAM_ENABLE_PIN)) {
         gpio_init(FRAM_ENABLE_PIN, GPIO_OUT);
@@ -51,7 +54,7 @@ int fram_init(void)
         printf("ERROR: FRAM initialization failed (%d)\n", status);
         return 1;
     }
-    puts("FRAM initialized successfully");
+    DEBUG("FRAM initialized successfully");
     return 0;
 }
 
@@ -93,6 +96,6 @@ int fram_erase(void)
         printf("ERROR: FRAM erase failed (%d)\n", status);
         return 1;
     }
-    puts("FRAM erased");
+    DEBUG("FRAM erased");
     return 0;
 }

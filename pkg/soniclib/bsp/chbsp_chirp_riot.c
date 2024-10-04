@@ -25,7 +25,12 @@
 #define CHIRP_I2C_0             I2C_DEV(1)
 
 #define CHIRP_PROG_1            GPIO_PIN(PA, 7)
+#ifdef ENABLEVCC1V8
+#define CHIRP_PIN_1             GPIO_PIN(PA, 0)
+#else
 #define CHIRP_PIN_1             GPIO_PIN(PA, 6)
+#endif
+
 #define CHIRP_I2C_1             I2C_DEV(2)
 
 static uint8_t chirp_i2c_addr[] = {41, 41};

@@ -287,11 +287,20 @@ static const i2c_conf_t i2c_config[] = {
 #define ADC_NEG_INPUT                           ADC_INPUTCTRL_MUXNEG_GND
 #define ADC_REF_DEFAULT                         ADC_REFCTRL_REFSEL_INTREF
 
+#ifdef ENABLEVCC1V8
+static const adc_conf_chan_t adc_channels[] = {
+    /* port, pin, muxpos */
+    { .inputctrl = ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC }, // mux pin is unused
+    { .inputctrl = ADC_INPUTCTRL_MUXPOS_PA08 },        // Vpanel
+    { .inputctrl = ADC_INPUTCTRL_MUXPOS_PA06 },        // VSupercap
+};
+#else
 static const adc_conf_chan_t adc_channels[] = {
     /* port, pin, muxpos */
     { .inputctrl = ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC }, // mux pin is unused
     { .inputctrl = ADC_INPUTCTRL_MUXPOS_PA08 },        // Vpanel
 };
+#endif
 
 #define ADC_NUMOF                               ARRAY_SIZE(adc_channels)
 /** @} */

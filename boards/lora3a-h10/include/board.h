@@ -24,7 +24,12 @@ extern "C" {
 #define TCXO_PWR_PIN        GPIO_PIN(PA, 9)     /**< 32 MHz TCXO 1ppm oscillator for radio enable */
 #define TX_OUTPUT_SEL_PIN   GPIO_PIN(PA, 13)    /**< BAND_SEL */
 
+#ifdef ENABLEVCC1V8
+#define BTN0_PIN       GPIO_PIN(PA, 0)
+#define BTN0_MODE      GPIO_IN
+#else
 #define BTN0_PIN       GPIO_PIN(PA, 6)
+#endif
 #ifndef BTN0_MODE
 #define BTN0_MODE      GPIO_IN_PU
 #endif

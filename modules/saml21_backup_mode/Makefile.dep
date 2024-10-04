@@ -4,4 +4,5 @@ FEATURES_REQUIRED += periph_rtc
 
 ifeq (,$(filter samr34,$(CPU_MODEL)))
   USEMODULE += sx127x
+  USEMODULE += periph_spi_reconfigure
 endif
